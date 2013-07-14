@@ -1,0 +1,6 @@
+<ul>
+	<li ng-repeat="triple in triples">
+		{{triple.subject}}. {{triple.property}} = {{triple.object}}
+	</li>
+</ul>
+

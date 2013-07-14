@@ -1,0 +1,8 @@
+{
+  "http://dbpedia.org/resource/Lena_Soderberg" : { "http://www.w3.org/2000/01/rdf-schema#label" : [ { "type" : "literal", "value" : "Lena Soderberg" , "lang" : "en" } ] ,
+    "http://dbpedia.org/ontology/wikiPageRedirects" : [ { "type" : "uri", "value" : "http://dbpedia.org/resource/Lena_S%C3%B6derberg" } ] ,
+    "http://dbpedia.org/ontology/wikiPageID" : [ { "type" : "literal", "value" : 29772082 , "datatype" : "http://www.w3.org/2001/XMLSchema#integer" } ] ,
+    "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" : [ { "type" : "uri", "value" : "http://en.wikipedia.org/wiki/Lena_Soderberg" } ] } ,
+  "http://en.wikipedia.org/wiki/Lena_Soderberg" : { "http://xmlns.com/foaf/0.1/primaryTopic" : [ { "type" : "uri", "value" : "http://dbpedia.org/resource/Lena_Soderberg" } ] }
+}
+
