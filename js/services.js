@@ -2,17 +2,31 @@ angular.module('dbpvServices', [])
 	.factory('Entity', ['$http', function($http) {
 		return {
 			triples: function(eid) {
+				var entityUrl = "http://dbpedia.org/resource/"+eid;
 				var trips = [];
 				var preloaded = [];
 				try{
-					preloaded = jQuery("#preloaded");
+					preloaded = $("#content");
 				}catch(err){
 //alert(err.message);
 				}
 				if (preloaded.length === 1) {
 //alert("found something!!!");
 					try{
-						trips = jQuery.parseJSON(preloaded.text());
+						var tripledump = preloaded.rdf().databank.dump();
+						alert(JSON.stringify(tripledump));
+						for (var subj in tripledump) {
+							var properties = tripledump[subj];
+							for (var prop in properties) {
+								var propertyvalues = properties[prop];
+								for (var i = 0; i<propertyvalues.length; i++) {
+									obj = propertyvalues[i]['value'];
+									trips.push({'subject':subj, 'property':prop, 'object':obj});
+								}
+							}
+						}
+						//TODO parse RDFQuery results
+						//trips = jQuery.parseJSON(preloaded.text());
 						preloaded.remove();
 					}catch(err){
 alert("malformed JSON");
@@ -22,7 +36,6 @@ alert("malformed JSON");
 					delete $http.defaults.headers.common['X-Requested-With'];
 					var prevdef = $http.defaults.headers.post['Content-Type'];	
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-					var entityUrl = "http://dbpedia.org/resource/"+eid;
 					var query = "SELECT ?hasprop ?v ?isprop where {{<"+entityUrl+"> ?hasprop ?v}UNION{?v ?isprop <"+entityUrl+">}} LIMIT 10000";
 					query = encodeURIComponent(query);
 				//alert(query);

@@ -9,7 +9,7 @@
 <body>
 <div hidden="true" class="test">
 [{"uri": "/entity/Einstein", "title": "Einstein"}]
-</script>
+</div>
 <div ng-view>
 <ul>
 <li> <a href="/entity/Lenka"> Lenka</a>
