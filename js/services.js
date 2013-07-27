@@ -99,6 +99,7 @@ alert("malformed JSON");
 					});
 					$http.defaults.headers.post['Content-Type'] = prevdef;
 				}
+				//alert("trips:"+JSON.stringify(trips));
 				return trips;
 			}
 		};

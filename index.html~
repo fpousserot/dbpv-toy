@@ -1,12 +1,12 @@
 <html lang="en" ng-app="dbpv">
 <head>	<title>Index</title>
 	<script src="js/jquery.js"></script>
+	<script src="js/jquery.rdfquery.core.js"></script>
+	<script src="js/jquery.rdfquery.rdfa.js"></script>
 	<script src="js/angular.min.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/controllers.js"></script>
-	<script src="js/jquery.rdfquery.core.js"></script>
-	<script src="js/jquery.rdfquery.rdfa.js"></script>
 </head>
 <body>
 <!--<div hidden="true" id="preloaded">

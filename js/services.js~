@@ -52,6 +52,8 @@ angular.module('dbpvServices', [])
 						//TODO parse RDFQuery results
 						//trips = jQuery.parseJSON(preloaded.text());
 						preloaded.remove();
+
+						dbpv_preprocess_triples(trips);
 						//return trips;
 					}catch(err){
 alert("malformed JSON");
@@ -97,6 +99,7 @@ alert("malformed JSON");
 					});
 					$http.defaults.headers.post['Content-Type'] = prevdef;
 				}
+				alert("trips:"+JSON.stringify(trips));
 				return trips;
 			}
 		};

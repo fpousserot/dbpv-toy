@@ -39,6 +39,24 @@ alert(data["results"].length);
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
 	$scope.triples = Entity.triples($routeParams.id);
+	$scope.pretties = [];
+	// extract meaningful triples for pretty box
+	$scope.$watch('triples', function(trips) {
+		if (trips !== undefined && trips.length>0) {
+			var about = trips[0].subject.url;
+			for (var i = 0; i<trips.length; i++) {
+				var triple = trips[i];
+				if (triple.subject.url == about) {
+					var pretty = dbpv_pretty_triple(triple);
+					if (pretty !== undefined) {
+						$scope.pretties.push(pretty);
+					}
+				}else{
+					break;
+				}
+			}
+		}
+	},true);
 }
 
 function postEntityCtrl ($scope, $routeParams, $http) {

@@ -10,9 +10,10 @@ var dbpv = angular.module('dbpv', ['dbpvServices']);
 
 */
 dbpv.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/entity/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
+		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/entity/'+params.id;} })
 		.when('/search/:id', {templateUrl: '/tpl/search.html', controller: SearchCtrl})
 		.when('/list.html', {templateUrl: '/tpl/list.html', controller: ListCtrl})
 		.otherwise({redirectTo: '/entity/404'});

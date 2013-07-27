@@ -38,46 +38,28 @@ alert(data["results"].length);
 }
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
-	//$scope.triples = Entity.triples($routeParams.id);
-
-	// preprocessing logic + showing logic
-	var prefixes = {
-		"http://dbpedia.org/resource/": "dbpedia",
-		"http://http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
-		"http://xmlns.com/foaf/0.1/": "foaf",
-		"http://dbpedia.org/ontology/": "dbpedia-owl"
-	};
-	var localns = "http://dbpedia.org/resource/";
-
-	var triples = Entity.triples($routeParams.id);
-	for (var i = 0; i<triples.length; i++) {
-		var triple = triples[i];
-		for (var key in triple) {
-			var sing = triple[key];
-			if (sing.type=="uri") {
-				for (var start in prefixes) {
-					if (sing.url.slice(0, start.length) == start) {
-						sing.prefix = prefixes[start];
-						sing.short = sing.url.slice(start.length, sing.url.length);
+	$scope.triples = Entity.triples($routeParams.id);
+	$scope.pretties = [];
+	// extract meaningful triples for pretty box
+	$scope.$watch('triples', function(trips) {
+		if (trips !== undefined && trips.length>0) {
+			var about = trips[0].subject.url;
+			//alert("watched"+JSON.stringify(trips));
+			for (var i = 0; i<trips.length; i++) {
+				var triple = trips[i];
+				if (triple.subject.url == about) {
+					var pretty = dbpv_pretty_triple(triple);
+					if (pretty !== undefined) {
+						$scope.pretties.push(pretty);
+						//alert(JSON.stringify(pretty));
 					}
-				}
-				if (sing.url.slice(0, localns.length) == localns) {
-					sing.uri = sing.url;
-					sing.url = "/entity/"+sing.url.slice(localns.length, sing.url.length);
-				}
-				if (sing.prefix!==undefined && sing.short !== undefined) {
-					sing.label = sing.prefix + ":" + sing.short;
 				}else{
-					sing.label = sing.url;
+					break;
 				}
-
-			}else{
-				sing.label = sing.value;
 			}
 		}
-	}
-
-	$scope.triples = triples;
+	},true);
+//	alert(JSON.stringify($scope.triples));
 }
 
 function postEntityCtrl ($scope, $routeParams, $http) {
