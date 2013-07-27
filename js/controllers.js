@@ -38,23 +38,41 @@ alert(data["results"].length);
 }
 
 function newPostEntityCtrl($scope, $routeParams, Entity) {
-	$scope.triples = Entity.triples($routeParams.id);
+	$scope.counter = 0;
+	$scope.loadMore = function() {
+		if ($scope.triplesB !== undefined && $scope.counter < $scope.triplesB.length){
+		for (var i = 0; i < 5; i++) {
+			var amount = 50;
+			for (var j = 0; j < amount; j++) {
+				$scope.triples.push($scope.triplesB[$scope.counter]);
+				$scope.counter ++;
+			}
+		}}
+	};
+	$scope.triples = [];
+	Entity.triples($routeParams.id, $scope);
 	$scope.pretties = [];
+//	$scope.pretty = false;
 	// extract meaningful triples for pretty box
 	$scope.$watch('triples', function(trips) {
 		if (trips !== undefined && trips.length>0) {
-			var about = trips[0].subject.url;
 			for (var i = 0; i<trips.length; i++) {
 				var triple = trips[i];
-				if (triple.subject.url == about) {
+				if (triple.query == "a") {
 					var pretty = dbpv_pretty_triple(triple);
 					if (pretty !== undefined) {
-						$scope.pretties.push(pretty);
+						var toaddornot = true;
+						for (var j = 0; j<$scope.pretties.length; j++){
+							a = $scope.pretties[j];
+							if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
+								toaddornot = false;
+							}
+						}
+						if (toaddornot)	$scope.pretties.push(pretty);
 					}
-				}else{
-					break;
 				}
 			}
+//			$scope.pretty= true;
 		}
 	},true);
 }
