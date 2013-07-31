@@ -12,7 +12,7 @@ angular.module('dbpvServices', [])
 //alert(err.message);
 				}
 				var about = $("[about]").attr("about");
-				if (preloaded.length === 1 && about !== undefined) {
+				if (false && preloaded.length === 1 && about !== undefined) {
 //alert("found something!!!");
 					try{
 						var rdf = preloaded.rdf();
@@ -59,15 +59,17 @@ angular.module('dbpvServices', [])
 alert("malformed JSON");
 					}
 				}else{
-					$http.defaults.useXDomain = true;
+					//$http.defaults.useXDomain = true;
 					delete $http.defaults.headers.common['X-Requested-With'];
 					var prevdef = $http.defaults.headers.post['Content-Type'];	
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 					var query = "SELECT ?hasprop ?v ?isprop where {{<"+entityUrl+"> ?hasprop ?v}UNION{?v ?isprop <"+entityUrl+">}} LIMIT 10000";
+
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
 					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">}");
 					query = encodeURIComponent(query);
 					var endpoint = "http://dbpedia.org/sparql";
+
 
 /*					$http.post(endpoint, "query="+query).success(function(data, status, headers, config) {
 						var bindings = data['results']['bindings'];
@@ -102,13 +104,13 @@ alert("malformed JSON");
 
 
 					// START XXX NEW
-					var tripls = [];
 					$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
-						//alert("query a - 1");
+						var predicates = {};
 						var bindings = data["results"]["bindings"];
+						try{
 						for (var i = 0; i<bindings.length; i++) {	
 							var trip = new Object();
-							var subject = {'type':'uri', 'url':entityUrl};
+
 							var object = new Object();
 							var tripleline = bindings[i];
 							var val = tripleline['v'];
@@ -118,34 +120,33 @@ alert("malformed JSON");
 							if (object.hasOwnProperty("type") && object.type=="uri") {
 								object.url = object.value;
 							}
-							var property = {"type":"uri", "url": tripleline["hasprop"]["value"]};
-							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'a'});
-							
-						}
-						//alert("query a - 2");
-						dbpv_preprocess_triples(tripls);
-						scope.triples = scope.triples.concat(tripls);
+							var property = {"type":"uri", "url": tripleline["hasprop"]["value"], "reverse":false, "complete":true};
+							dbpv_preprocess_triple_value(property);
+							dbpv_preprocess_triple_value(object);
 
-						//alert("query a - 3");
-						//trips = trips+tripls;
-						//trips = trips.concat(tripls);
-						//trips.push.apply(trips,tripls);
-						/*for (var k = 0; k<tripls.length; k++) {
-							trips.push(tripls[k]);
-						}*/
-						
+							predid  = "i-"+property.url;
+							predicate = predicates[predid];
+							if (predicate === undefined) { // add it
+								predicates[predid] = property;
+								predicate = property;
+								predicate.predid = predid;
+								predicate.values = [];
+							}
+							predicate.values.push(object);
+						}
+						}catch(err){alert("error in loop");}
+						scope.predicates = jQuery.extend({}, scope.predicates, predicates);
 					}).
 					error(function (data, status, headers, config) {
 						alert("Inquery loading error");
 					});
 					// MEDIAS RES XXX NEW
-					tripls = [];
 					$http.post(endpoint, "query="+outquery).success(function(data, status, headers, config) {
-						//alert("query b - 1");
+						predicates = {};
 						var bindings = data["results"]["bindings"];
+						try{
 						for (var i = 0; i<bindings.length; i++) {	
 							var trip = new Object();
-							var object = {'type':'uri', 'url':entityUrl};
 							var subject = new Object();
 							var tripleline = bindings[i];
 							var val = tripleline['v'];
@@ -155,21 +156,44 @@ alert("malformed JSON");
 							if (subject.hasOwnProperty("type") && subject.type=="uri") {
 								subject.url = subject.value;
 							}
-							var property = {"type":"uri", "url": tripleline["isprop"]["value"]};
-							tripls.push({'subject':subject, 'property':property, 'object': object, 'query':'b'});
-							
+							var property = {"type":"uri", "url": tripleline["isprop"]["value"], "reverse":true};
+							dbpv_preprocess_triple_value(property);
+							dbpv_preprocess_triple_value(subject);
+
+							predid = "o-"+property.url;
+							predicate = predicates[predid];
+							if (predicate === undefined) { // add it
+								predicates[predid] = property;
+								predicate = property;
+								predicate.predid = predid;
+								predicate.values = [];
+							}
+							predicate.values.push(subject);
 						}
-						//alert("query b - 2");
-						dbpv_preprocess_triples(tripls);
-						scope.triplesB = scope.triples.concat(tripls);
-						//alert("done"+scope.triplesB.length);
-						//alert("query b - 3");
-						//trips = trips+tripls;
-						//trips = trips.concat(tripls);
-						//trips.push.apply(trips,tripls);
-						/*for (var k = 0; k<tripls.length; k++) {
-							trips.push(tripls[k]);
-						}*/
+						}catch(err){alert("error in loop");}
+						scope.revpredicates = jQuery.extend({}, scope.revpredicates, predicates);
+						for (var revpred in scope.revpredicates) {
+							var totransfer = scope.revpredicates[revpred];
+							var transfer = {};
+							for (var predkey in totransfer) {
+								if (predkey != "values" && predkey != "$$hashKey") {
+									transfer[predkey] = totransfer[predkey];
+								}
+							}
+							var init_amount = 5;
+							init_amount = Math.min(init_amount, totransfer["values"].length);
+							transfer.values = [];
+							for (var i = 0; i< init_amount; i++) {
+								transfer["values"].push(totransfer["values"][0]);
+								totransfer["values"].splice(0, 1);
+							}
+							if (totransfer["values"].length == 0) {
+								transfer["complete"] = true;
+							}else{
+								transfer["complete"] = false;
+							}
+							scope.predicates[revpred] = transfer;
+						}
 					}).
 					error(function (data, status, headers, config) {
 						alert("Outquery loading error");
@@ -178,8 +202,6 @@ alert("malformed JSON");
 
 					$http.defaults.headers.post['Content-Type'] = prevdef;
 				}
-				//alert("trips:"+JSON.stringify(trips));
-				//return trips;
 			}
 		};
 	}]);
