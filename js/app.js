@@ -1,7 +1,7 @@
 var dbpv = angular.module('dbpv', ['dbpvServices']);
 
 dbpv.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
@@ -24,6 +24,24 @@ dbpv.filter("predicateFilter", function() {
 	};
 });
 
+dbpv.filter("predicateValueFilter", function() { //XXX maybe merge with previous filter
+	return function(input, query) {
+		if (!query) return input;
+		var result = [];
+		angular.forEach(input, function(predicate) {
+			var hasvalues = false;
+			for (var i = 0; i<predicate.values.length; i++) {	//simulates value filter
+				if (predicate.values[i].label.indexOf(query.label) != -1) {
+					hasvalues = true;
+				}	
+			}
+			if (hasvalues) {
+				result.push(predicate);
+			}
+		});
+		return result;
+	}
+});
 
 dbpv.filter("languageFilter", function() {
 	return function(input, query) {

@@ -35,7 +35,7 @@
 		<span ng-show="predicate.reverse"> of</span>:
 		</div>
 		<div class="pred-values">
-			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter ">
+			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
 				<span ng-switch on="val.type">
 					<span ng-switch-when="uri"> <a href="{{val.url}}">
 						<span ng-switch on="val.prefix">

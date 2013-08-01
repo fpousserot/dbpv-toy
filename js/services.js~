@@ -68,7 +68,7 @@ alert("malformed JSON");
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
 					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">}");
 					query = encodeURIComponent(query);
-					var endpoint = "http://live.dbpedia.org/sparql";
+					var endpoint = "http://dbpedia.org/sparql";
 
 
 /*					$http.post(endpoint, "query="+query).success(function(data, status, headers, config) {

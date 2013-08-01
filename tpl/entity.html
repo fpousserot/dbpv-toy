@@ -23,7 +23,7 @@
 	</div>
 </div>
 <div id="triples">
-	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter">
+	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter">
 		<div class="pred-name">
 		<span ng-show="predicate.reverse">is </span>
 		<a href="{{predicate.url}}">
