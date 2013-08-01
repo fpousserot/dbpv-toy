@@ -27,25 +27,23 @@ dbpv.filter("predicateFilter", function() {
 
 dbpv.filter("languageFilter", function() {
 	return function(input, query) {
-		if(!query) return input;
+		if(!query || input.length<2) return input;
 		var result = [];
 		var breek = false;
-		if (input.length > 1) {
-			angular.forEach(input, function(predval) {
-				if (!breek){
-					if (predval['xml:lang'] === undefined) {
-						result.push(predval);
-					}else{
-						if (predval['xml:lang'] == query) {
-							result = [predval];
-							breek = true;
-						}else if (result.length == 0 && predval['xml:lang'] == dbpv_fallback_lang) {
-							result = [predval];
-						}
+		angular.forEach(input, function(predval) {
+			if (!breek){
+				if (predval['xml:lang'] === undefined) {
+					result.push(predval);
+				}else{
+					if (predval['xml:lang'] == query) {
+						result = [predval];
+						breek = true;
+					}else if (result.length == 0 && predval['xml:lang'] == dbpv_fallback_lang) {
+						result = [predval];
 					}
 				}
-			});
-		}
+			}
+		});
 		return result;
 	};
 });

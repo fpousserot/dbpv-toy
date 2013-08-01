@@ -73,6 +73,8 @@ function LookupCtrl($scope, $http, $timeout) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
+	$scope.primary_language = "en";
+
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {
 			$scope.results = [];
@@ -106,8 +108,8 @@ function LookupCtrl($scope, $http, $timeout) {
 		}
 	}
 
-	$scope.onResultClick = function() {
-		$scope.term = "";
+	$scope.clearResults = function() {
+		$scope.results = "";
 	};
 }
 

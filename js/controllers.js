@@ -108,8 +108,8 @@ function LookupCtrl($scope, $http, $timeout) {
 		}
 	}
 
-	$scope.onResultClick = function() {
-		$scope.term = "";
+	$scope.clearResults = function() {
+		$scope.results = [];
 	};
 }
 

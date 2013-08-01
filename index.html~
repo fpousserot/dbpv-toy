@@ -33,13 +33,13 @@
 			<button type="button" class="btn-entity-search btn btn-primary" id="search" ng-click="dolookup()">
 				<span class="glyphicon glyphicon-search"></span>
 			</button>
-			<select class="form-control select-lang" ng-model="primary_language" ng-options="label for (label, code) in languages">
+			<select class="form-control select-lang" ng-model="primary_language" ng-options="lang.code as lang.label for lang in languages">
 				
 			</select>
 			</div>
 		<ul id="lookup-results">
 			<li ng-repeat="result in results">
-				<a href="{{result.url}}" ng-click="onResultClick()">{{result.short}}</a>
+				<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>
 			</li>
 		</ul>
 		</form>
