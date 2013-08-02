@@ -1,4 +1,4 @@
-function newPostEntityCtrl($scope, $routeParams, Entity) {
+function EntityCtrl($scope, $routeParams, $filter, Entity) {
 	/*$scope.loadMore = function(amount) {
 		if ($scope.triplesB !== undefined && 0 < $scope.triplesB.length){
 			if (typeof(amount) == "undefined") amount = 10;
@@ -33,16 +33,36 @@ function newPostEntityCtrl($scope, $routeParams, Entity) {
 		}
 	};
 
+	$scope.sortPredicates = function(item) {
+		return item.predid;
+	};
+
 	$scope.predicates = {};
 	$scope.revpredicates = {};
 
 	Entity.triples($routeParams.id, $scope);
-	$scope.pretties = [];
-	// extract meaningful triples for pretty box
+	$scope.dbpvp = {};
+
+	// object-oriented extraction for pretty box (XXX)
 	$scope.$watch('predicates', function(predicates) {
+		if (predicates !== undefined) {
+			for (var id in predicates) {
+				if (id!==undefined) {
+					dbpvp_process_predicate($scope.dbpvp, predicates[id]);
+				}
+			}
+		}
+		//alert($scope.dbpvp);
+	});
+	// extract meaningful triples for pretty box
+	/*$scope.$watch('predicates', function(predicates) {
 		//predicates.sort();
 		if (predicates !== undefined) {
 			for (var id in predicates) {
+				var pretty = dbpv_pretty_predicate(predicates[id]);
+				if (pretty != undefined) {
+					
+				}
 				var predicate = predicates[id];
 				if (predicate.reverse == false) {
 					for (var i = 0; i<predicate.values.length; i++) {
@@ -61,7 +81,7 @@ function newPostEntityCtrl($scope, $routeParams, Entity) {
 				}
 			}
 		}
-	},true);
+	},true);*/
 }
 
 function LookupCtrl($scope, $http, $timeout) {
@@ -109,7 +129,7 @@ function LookupCtrl($scope, $http, $timeout) {
 	}
 
 	$scope.clearResults = function() {
-		$scope.results = "";
+		$scope.results = [];
 	};
 }
 
@@ -224,7 +244,7 @@ alert($routeParams.id);
 //		$http.defaults.headers.common['Content-Type'] = prevdef;
 }*/
 
-function EntityCtrl ($scope, $routeParams, $http, Entity) {
+function routerEntityCtrl ($scope, $routeParams, $http, Entity) {
 //	getEntityCtrl($scope, $routeParams, $http);
 //	postEntityCtrl($scope,$routeParams, $http);
 	newPostEntityCtrl($scope, $routeParams, Entity);

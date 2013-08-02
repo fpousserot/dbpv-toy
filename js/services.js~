@@ -66,9 +66,9 @@ alert("malformed JSON");
 					var query = "SELECT ?hasprop ?v ?isprop where {{<"+entityUrl+"> ?hasprop ?v}UNION{?v ?isprop <"+entityUrl+">}} LIMIT 10000";
 
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
-					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">}");
+					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
 					query = encodeURIComponent(query);
-					var endpoint = "http://dbpedia.org/sparql";
+					var endpoint = "http://live.dbpedia.org/sparql";
 
 
 /*					$http.post(endpoint, "query="+query).success(function(data, status, headers, config) {
@@ -104,6 +104,9 @@ alert("malformed JSON");
 
 
 					// START XXX NEW
+					var retry = 3;
+					while(retry>0){
+					retry--;
 					$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
 						var predicates = {};
 						var bindings = data["results"]["bindings"];
@@ -138,7 +141,7 @@ alert("malformed JSON");
 						scope.predicates = jQuery.extend({}, scope.predicates, predicates);
 					}).
 					error(function (data, status, headers, config) {
-						alert("Inquery loading error");
+						//alert("Inquery loading error");
 					});
 					// MEDIAS RES XXX NEW
 					$http.post(endpoint, "query="+outquery).success(function(data, status, headers, config) {

@@ -150,6 +150,35 @@ label.dbpv-tabletop {
 #lookup-results li {
 	background-color: white;
 	border: 1px solid #CCC;
+	margin-top: 2px;
 	padding: 10px;
 	padding-left: 15px;
 }
+
+#pretty-box {
+	background-color: white;
+	border: 1px solid #CCC;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	overflow: hidden;
+}
+
+#pretty-box #dbpvptext {
+}
+
+#pretty-box #dbpvpthumbnail {
+	margin-right: 15px;
+}
+
+
+#pretty-box #dbpvplabel {
+	padding-left: 15px;
+	padding-top: 5px;
+	font-size: 2.5em;
+}
+
+#pretty-box #dbpvpdescription {
+	margin-bottom: 10px;
+	padding-left: 15px;
+}
+

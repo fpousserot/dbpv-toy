@@ -1,17 +1,49 @@
 <!--<div style="height:100%; overflow:auto;" when-scrolled="loadMore()">-->
 <div id="triples">
 <div id="pretty-box">
-<ul>
-        <li ng-repeat="pretty in pretties | prettyLanguageFilter:primary_lang">
+	<div id="dbpvpthumbnail">
+		<img src="{{dbpvp.thumbnail[0].value}}"></img>
+	</div>
+	<div id="dbpvptext">
+	<div id="dbpvplabel">
+		<span ng-repeat="value in dbpvp.label |languageFilter:primary_lang">
+			{{value.value}}
+		</span>
+	</div>
+	<div id="dbpvpdescription">
+		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang">
+			{{value.value}}
+		</span>
+	</div>
+	</div>
+<!--        <span ng-repeat="pretty in predicates | prettyFilterLang:primary_lang">
+		<div class="{{pretty.cls}}">
 		<span ng-show="pretty.show_prop">{{pretty.property}}: </span>
 		<span ng-switch on="pretty.type">
-			<span ng-switch-when="img"> <img src="{{pretty.value}}"/> </span>
-			<span ng-switch-when="uri"> <a href="{{pretty.value}}">{{pretty.value}}</a></span>
-			<span ng-switch-when="text"> {{pretty.value}} </span>
-			<span ng-switch-default> {{pretty.value}} </span>
+			<span ng-switch-when="img">
+				<span ng-repeat="value in pretty.values">
+					<img src="{{value.value}}"></img>
+				</span>
+			</span>
+			<span ng-switch-when="uri"> 
+				<span ng-repeat="value in pretty.values">
+					<a href="{{value.url}}"> {{value.label}} </a>
+				</span>
+			</span>
+			<span ng-switch-when="text"> 
+				<span ng-repeat="value in pretty.values">
+					{{value.value}} 
+				</span>
+			<span>
+			<span ng-switch-default>
+				<span ng-repeat="value in pretty.values">
+					{{value.value}} 
+				</span>
+			</span>
 		</span>
-	</li>
-</ul>
+		</div>
+	</span>
+-->
 </div>
 
 <div id="triple-list">
@@ -23,7 +55,7 @@
 	</div>
 </div>
 <div id="triples">
-	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter">
+	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
 		<div class="pred-name">
 		<span ng-show="predicate.reverse">is </span>
 		<a href="{{predicate.url}}">

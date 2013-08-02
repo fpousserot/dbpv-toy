@@ -1,3 +1,34 @@
+
+/*'<div class="navbar navbar-fixed-top"> \
+	<div class="dbp-logo"> 					\
+		<img src="css/200px-dbpedia.png"></img> \
+		<p> Named Graph: dbpedia.org </p> \
+		<p> Data Space: localhost </p>\
+	</div>\
+	<div id="searchbar" ng-controller="LookupCtrl">\
+		<form novalidate class="simple-form form-inline">\
+			<div class="form-group">\
+			<input type="text" class="form-control entity-search dbpv-input" ng-model="term" onblur="clearResults()"/>\
+			<button type="button" class="btn-entity-search btn btn-primary" id="search" ng-click="dolookup()">\
+				<span class="glyphicon glyphicon-search"></span>\
+			</button>\
+			<select class="form-control select-lang" ng-model="primary_language" ng-options="lang.code as lang.label for lang in languages">\
+				\
+			</select>\
+			</div>\
+		<ul id="lookup-results">\
+			<li ng-repeat="result in results">\
+				<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>\
+			</li>\
+		</ul>\
+		</form>\
+	\
+	</div>\
+</div>\
+\
+<div id="page-contents" ng-view></div>');*/
+
+
 var dbpv_prefixes = {
 		"http://dbpedia.org/resource/": "dbpedia",
 		"http://http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
@@ -16,7 +47,45 @@ var dbpv_languages = [	{"label":"English", "code": "en"},
 			{"label":"Dutch", "code": "nl"},
 			];
 
-function dbpv_pretty_predicate(url, value) {
+function dbpvp_process_predicate(pretty, predicate) {
+	mapping = { 	"http://www.w3.org/2000/01/rdf-schema#label": "label",
+			"http://www.w3.org/2000/01/rdf-schema#comment": "description",
+			"http://dbpedia.org/ontology/thumbnail": "thumbnail"
+		  };
+	var property = mapping[predicate.url];
+	var value = undefined;
+	if (property !== undefined) {
+		pretty[property] = predicate.values;
+	}
+}
+
+function dbpv_pretty_predicate(predicate) {
+	var dbpv_pretty_map = {
+		"http://www.w3.org/2000/01/rdf-schema#label":
+			{"property": "label", "show_prop": false, "type": "text"},
+		"http://www.w3.org/2000/01/rdf-schema#comment": 
+			{"property": "Description", "show_prop": true, "type": "text"},
+		"http://dbpedia.org/ontology/birthPlace": 
+			{"property":"Place of Birth", "show_prop":true, "type": "text"},
+		"http://dbpedia.org/ontology/birthDate": 
+			{"property":"Date of Birth", "show_prop":true, "type": "text"},
+		"http://xmlns.com/foaf/0.1/primaryTopic": 
+			{"property": "wikipage", "show_prop":false, "type": "uri"},
+		"http://dbpedia.org/ontology/depiction": 
+			{"property":"image", "show_prop":false, "type": "img"},
+		"http://xmlns.com/foaf/0.1/name": 
+			{"property": "name", "show_prop":true, "type": "text"}
+	};
+	for (var i = 0; i<predicate.values; i++) {
+		var addit = dbpv_pretty_map[predicate.url];
+		if (addit !== undefined) {
+			var value = predicate.values[i];
+		}
+		
+	}
+}
+
+function dbpv_pretty_predicate_old(url, value) {
 	var dbpv_pretty_map = {
 		"http://www.w3.org/2000/01/rdf-schema#label":
 			{"property": "label", "show_prop": false, "type": "text"},
@@ -37,6 +106,9 @@ function dbpv_pretty_predicate(url, value) {
 	if (pretty !== undefined) {
 		pretty.value = value.value;
 		pretty.source = value;
+		if (value['xml:lang'] !== undefined && value['xml:lang'] != "undefined") {
+			pretty['xml:lang'] = value['xml:lang'];
+		}
 	}
 	return pretty;
 }
