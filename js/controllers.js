@@ -1,17 +1,5 @@
-function EntityCtrl($scope, $routeParams, $filter, Entity) {
-	/*$scope.loadMore = function(amount) {
-		if ($scope.triplesB !== undefined && 0 < $scope.triplesB.length){
-			if (typeof(amount) == "undefined") amount = 10;
-			var totransfer = $scope.triplesB.slice(0, Math.min(amount, $scope.triplesB.length));
-			$scope.triplesB = $scope.triplesB.slice(Math.min(amount, $scope.triplesB.length), $scope.triplesB.length);
-//			if ($scope.triplesB.length==0) alert("nothing more to show");
-			for (var j = 0; j < totransfer.length; j++) {
-				$scope.triples.push(totransfer[j]);
-			}
-		}
-	};*/
-
-	$scope.$parent.$watch("primary_lang", function(lang){
+function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
+	$scope.$parent.$root.$watch("primary_lang", function(lang){
 		$scope.primary_lang = lang;
 	});
 
@@ -40,7 +28,7 @@ function EntityCtrl($scope, $routeParams, $filter, Entity) {
 	$scope.predicates = {};
 	$scope.revpredicates = {};
 
-	Entity.triples($routeParams.id, $scope);
+	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
 	// object-oriented extraction for pretty box (XXX)
@@ -52,36 +40,23 @@ function EntityCtrl($scope, $routeParams, $filter, Entity) {
 				}
 			}
 		}
-		//alert($scope.dbpvp);
 	},true);
-	// extract meaningful triples for pretty box
-	/*$scope.$watch('predicates', function(predicates) {
-		//predicates.sort();
-		if (predicates !== undefined) {
-			for (var id in predicates) {
-				var pretty = dbpv_pretty_predicate(predicates[id]);
-				if (pretty != undefined) {
-					
-				}
-				var predicate = predicates[id];
-				if (predicate.reverse == false) {
-					for (var i = 0; i<predicate.values.length; i++) {
-						var pretty = dbpv_pretty_predicate(predicate.url, predicate.values[i]);
-						if (pretty !== undefined) {
-							var toaddornot = true;
-							for (var j = 0; j<$scope.pretties.length; j++){
-								var a = $scope.pretties[j];
-								if (a.property == pretty.property && a.value == pretty.value && a.type == pretty.type) { // check if already there XXX
-									toaddornot = false;
-								}
-							}
-							if (toaddornot)	$scope.pretties.push(pretty);
-						}
-					}
-				}
-			}
-		}
-	},true);*/
+}
+
+function EntityCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "resource", false);	
+}
+
+function OwlCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+}
+
+function PropCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+}
+
+function ClassCtrl($scope, $routeParams, $filter, Entity) {
+	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
 }
 
 function LookupCtrl($scope, $http, $timeout) {
@@ -93,7 +68,7 @@ function LookupCtrl($scope, $http, $timeout) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
-	$scope.primary_language = "en";
+	$scope.primary_language = "fr";
 
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {

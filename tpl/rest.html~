@@ -1,0 +1,39 @@
+<!--<div style="height:100%; overflow:auto;" when-scrolled="loadMore()">-->
+<div id="triples">
+
+<div id="triple-list">
+<div id="triples-top">
+	<div class="predicate"> <div class="pred-name form-inline"> <label class="dbpv-tabletop"> Property:</label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-pred" ng-model="predfilter" /></div>
+	<div class="pred-values">
+		<div class="pred-value form-inline"> <label class="dbpv-tabletop"> Value: </label> <input class="form-control dbpv-input dbpv-filter dbpv-filter-val" ng-model="valfilter.label" /></div>
+	</div>
+	</div>
+</div>
+<div id="triples">
+	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
+		<div class="pred-name">
+		<a href="{{predicate.url}}">
+			<span ng-switch on="predicate.prefix">
+				<span ng-switch-when="undefined">{{predicate.label}}</span>
+				<span ng-switch-default>  <span class="rdf-prefix">{{predicate.prefix}}:</span>{{predicate.short}}</span>
+			</span>
+		</a>:
+		</div>
+		<div class="pred-values">
+			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
+				<span ng-switch on="val.type">
+					<span ng-switch-when="uri"> <a href="{{val.url}}">
+						<span ng-switch on="val.prefix">
+							<span ng-switch-when="undefined">{{val.label}}</span>
+							<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
+						</span>
+					</a> </span>
+					<span ng-switch-default>{{val.label}}</span>
+				</span>
+			</div>
+		</div>
+	</div>
+
+</div>
+</div>
+</div>
