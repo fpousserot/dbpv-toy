@@ -21,6 +21,8 @@ function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
 		}
 	};
 
+	$scope.taf_actions = dbpv_taf_actions;
+
 	$scope.sortPredicates = function(item) {
 		return item.predid;
 	};

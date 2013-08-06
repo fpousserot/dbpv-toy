@@ -1,7 +1,7 @@
 var dbpv = angular.module('dbpv', ['dbpvServices']);
 
 dbpv.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
@@ -83,6 +83,19 @@ dbpv.filter("prettyLanguageFilter", function() {
 						result.push(predval);
 					}
 				}
+			}
+		});
+		return result;
+	};
+});
+
+dbpv.filter("actionFilter", function() {
+	return function(actions, pred, val) {
+		if(!pred || !val) return [];
+		var result = [];
+		angular.forEach(actions, function(action) {
+			if (action.autobind !== undefined && action.autobind(pred, val)) {
+				result.push(action);
 			}
 		});
 		return result;

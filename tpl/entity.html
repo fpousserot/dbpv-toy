@@ -68,16 +68,31 @@
 		</div>
 		<div class="pred-values">
 			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
-				<span ng-switch on="val.type">
-					<span ng-switch-when="uri"> <a href="{{val.url}}">
-						<span ng-switch on="val.prefix">
-							<span ng-switch-when="undefined">{{val.label}}</span>
-							<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
-						</span>
-					</a> </span>
-					<span ng-switch-default>{{val.label}}</span>
+
+
+				<span class="dbpv-taf">
+					<span ng-repeat="action in taf_actions | actionFilter:predicate:val">
+						<a href="javascript:void(0);" ng-click="action.execute(predicate, val);"> <span ng-bind-html-unsafe="action.name"></span> </a>
+					</span>
 				</span>
 
+
+
+<!--				<span class="dbpv-taf">
+					<span class="glyphicon glyphicon-play"></span>
+				</span>
+-->
+				<span>
+					<span ng-switch on="val.type">
+						<span ng-switch-when="uri"> <a href="{{val.url}}">
+							<span ng-switch on="val.prefix">
+								<span ng-switch-when="undefined">{{val.label}}</span>
+								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
+							</span>
+						</a> </span>
+						<span ng-switch-default>{{val.label}}</span>
+					</span>
+				</span>
 			</div>
 			<div ng-hide="predicate.complete">
 				<button class="btn btn-block btn-primary btn-small btn-show-more" ng-click="showMore(predicate.predid)">Show More</button>

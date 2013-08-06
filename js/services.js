@@ -73,7 +73,7 @@ alert("malformed JSON");
 					$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 					var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
 					var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
-					var endpoint = "http://live.dbpedia.org/sparql";
+					var endpoint = "http://dbpedia.org/sparql";
 					//endpoint = "/sparql";
 
 					// START XXX NEW
