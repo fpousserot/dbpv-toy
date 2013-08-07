@@ -90,11 +90,11 @@ dbpv.filter("prettyLanguageFilter", function() {
 });
 
 dbpv.filter("actionFilter", function() {
-	return function(actions, pred, val) {
+	return function(actions, about, pred, val) {
 		if(!pred || !val) return [];
 		var result = [];
 		angular.forEach(actions, function(action) {
-			if (action.autobind !== undefined && action.autobind(pred, val)) {
+			if (action.autobind !== undefined && action.autobind(about, pred, val)) {
 				result.push(action);
 			}
 		});

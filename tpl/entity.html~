@@ -68,11 +68,15 @@
 		</div>
 		<div class="pred-values">
 			<div class="pred-value" ng-repeat="val in predicate.values | filter:valfilter | languageFilter:primary_lang">
+
+
 				<span class="dbpv-taf">
-					<span ng-repeat="action in taf_actions | actionFilter:predicate:val">
-						<a href="javascript:void(0);" ng-click="action.execute(predicate, val);"> <span ng-bind-html-unsafe="action.name"></span> </a>
+					<span ng-repeat="action in taf_actions | actionFilter:about:predicate:val">
+						<a href="javascript:void(0);" ng-click="action.execute(about, predicate, val);"> <span ng-bind-html-unsafe="action.display(about, predicate, val);"></span> </a>
 					</span>
 				</span>
+
+
 
 <!--				<span class="dbpv-taf">
 					<span class="glyphicon glyphicon-play"></span>
