@@ -33,9 +33,11 @@ function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
-	// object-oriented extraction for pretty box (XXX)
 	$scope.$watch('predicates', function(predicates) {
 		if (predicates !== undefined) {
+			// TAF Binding			
+			
+			// Pretty Box
 			for (var id in predicates) {
 				if (id!==undefined) {
 					dbpvp_process_predicate($scope.dbpvp, predicates[id]);

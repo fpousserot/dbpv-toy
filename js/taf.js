@@ -94,6 +94,7 @@ dbpv_taf_dummy.execute = function (about, predicate, value) {			 // called when 
 var dbpv_taf_global = new TafAction();
 
 dbpv_taf_global.id = "global";
+dbpv_taf_global.clicks = 0;
 
 dbpv_taf_global.display_inactive = "<span class='glyphicon glyphicon-search'></span>";
 dbpv_taf_global.display_active = "<span class='glyphicon glyphicon-qrcode'></span>";
@@ -103,11 +104,11 @@ dbpv_taf_global.initialize = function (about, predicate, value) {
 };
 
 dbpv_taf_global.check = function (about, predicate, value) {
-	return value.type == "uri";
+	return dbpv_taf_global.clicks < 4 && value.type == "uri";
 };
 
 dbpv_taf_global.display = function (about, predicate, value) {
-	if (value.taf.global.active) {
+	if (dbpv_taf_global.clicks % 2 == 0) {
 		return dbpv_taf_global.display_active;
 	}else{
 		return dbpv_taf_global.display_inactive;
@@ -115,6 +116,6 @@ dbpv_taf_global.display = function (about, predicate, value) {
 };
 
 dbpv_taf_global.execute = function (about, predicate, value) {
-	
+	dbpv_taf_global.clicks += 1;
 };
 
