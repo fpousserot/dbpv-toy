@@ -32,7 +32,63 @@ TafAction.prototype.check = function (about, predicate, value) {
 	return true;
 };
 
+// XXX XXX XXX TAF MkIII ACTIONS XXX XXX XXX
+
+TafLodlive.prototype = new TafAction();
+function TafLodlive () {
+	TafAction.call(this);
+}
+
+
+
+
+
+
+
+
 //XXX XXX XXX ACTIONS DECLARE BELOW THIS LINE XXX XXX XXX
+
+// AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
+
+/*var dbpv_taf_prettymap = new TafAction();
+
+dbpv_taf_prettymap.id = "prettymap";
+dbpv_taf_prettymap.description = "Pretty Map";
+
+dbpv_taf_prettymap.initialize = function (about, predicate, value) {
+	if (dbpv_taf_prettymap.check (about, predicate, value)) {
+		dbpv_taf_prettymap.execute (about, predicate, value);
+	}
+};
+
+dbpv_taf_prettymap.check = function (about, predicate, value) {
+	if (predicate.uri == "http://www.georss.org/georss/point") {
+		return true;
+	}else {
+		return false;
+	}
+};
+
+dbpv_taf_prettymap.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_prettymap.execute = function (about, predicate, value) {
+//	alert("building map");
+	var coord = value.value;
+	var matches = coord.match(/([-+]?([0-9]*\.[0-9]+|[0-9]+))\s([-+]?([0-9]*\.[0-9]+|[0-9]+))/);
+	var lon = matches[1];
+	var lat = matches[3];
+	coord = [lon, lat];
+	$('#dbpvpmap').attr("class", "dbpvpmap-active");
+//	$('#dbpvpmapcontainer').html("<leaflet></leaflet>");
+	var map = L.map('dbpvpmap').setView(coord, 10);
+	L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	L.marker(coord).addTo(map);
+
+};*/
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 
@@ -108,7 +164,7 @@ dbpv_taf_global.check = function (about, predicate, value) {
 };
 
 dbpv_taf_global.display = function (about, predicate, value) {
-	if (value.taf.global.active) {
+	if (dbpv_taf_global.clicks % 2 == 0) {
 		return dbpv_taf_global.display_active;
 	}else{
 		return dbpv_taf_global.display_inactive;

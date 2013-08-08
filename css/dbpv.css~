@@ -75,7 +75,8 @@ body {
 .predicate .dbpv-taf {
 	position:relative;
 	float:right;
-	padding: 5px;
+	padding-left: 10px;
+	padding-bottom: 10px;
 }
 
 
@@ -187,5 +188,15 @@ label.dbpv-tabletop {
 #pretty-box #dbpvpdescription {
 	margin-bottom: 10px;
 	padding-left: 15px;
+}
+
+#dbpvpmapcontainer {
+	position:relative;
+	margin-bottom:10px;
+}
+
+#dbpvpmapcontainer #dbpvpmap-active {
+	height: 200px;
+	border: 1pt solid #CCC;
 }
 
