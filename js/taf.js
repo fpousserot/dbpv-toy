@@ -177,7 +177,7 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 
 
 // EXAMPLE OF AN ACTION WITH LOCAL STATE
-var dbpv_taf_dummy = new TafAction();
+/*var dbpv_taf_dummy = new TafAction();
 
 dbpv_taf_dummy.id = "dummy";
 
