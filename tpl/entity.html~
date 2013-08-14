@@ -119,7 +119,7 @@
 
 				<span class="dbpv-taf">
 					<span ng-repeat="(tafid, action) in val.taf">
-						<a href="javascript:void(0);" title="{{action.description}}" ng-click="executeAction(tafid, action);"> <span ng-bind-html-unsafe="displayAction(tafid, action)"></span> </a>
+						<a href="javascript:void(0);" title="{{action.description}}" ng-click="executeAction(tafid, action);"> <span ng-bind-html-unsafe="displayAction(tafid, action);"></span> </a>
 					</span>
 				</span>
 

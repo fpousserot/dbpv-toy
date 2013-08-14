@@ -1,83 +1,13 @@
 var dbpv_taf_actions = [];
 
+function tafAdd(action) {
+	dbpv_taf_actions.push(action);
+}
+
 function TafAction() {
 	dbpv_taf_actions.push(this);
 }
 
-/*
-
-A TAF action should have the following:
-	- an ID property
-	- a factory method (execute only once for each triple)
-	  that returns an action instance object with:
-
-		- an execute method (executed whenever button is clicked)
-		- a display property (icon)
-		- a description property
-
-The TAF API provides the following:
-	- calls the factory method for every value and stores 
-	  the action instance object returned in the model (value), binding it 
-	  in the model if the autobind method returned an object that is not undefined
-	- calls the execute method whenever button is clicked
-	- provides an unbind method
-
-*/
-
-TafAction.prototype.unbind = function (value) {
-	if (this.id in value.taf) {
-		delete value.taf[this.id];
-	}
-};
-
-TafAction.prototype.autobind = function (about, predicate, value) {
-	if (this.id in value.taf){
-		//already has this action
-	}else{
-		var instance = this.factory(about, predicate, value);
-		if (instance !== undefined) {
-			value.taf[this.id] = instance;
-		}
-	}
-};
-
-var SampleAction = new TafAction();
-SampleAction.id = "sample";
-
-SampleAction.factory = function(about, predicate, value) {
-	if (value.type != "uri") {
-		return {
-			display: "<span class='glyphicon glyphicon-play'></span>",
-			description: "Sample TAF Action",
-			active : false,
-			myvalue : value
-		};
-	}
-};
-
-SampleAction.display_active = "<span class='glyphicon glyphicon-play'></span>";
-SampleAction.display_inactive = "<span class='glyphicon glyphicon-globe'></span>";
-
-SampleAction.execute = function(instance) {
-				if (instance.active){
-					instance.active = false;
-					instance.myvalue.label += "_badum";
-				} else {
-					instance.active = true;
-					instance.myvalue.label += "_tss";
-				}
-			};
-
-SampleAction.display = function(instance) {
-	if (instance.active) {
-		return SampleAction.display_active;
-	}else{
-		return SampleAction.display_inactive;
-	}
-};
-
-
-/*
 TafAction.prototype.autobind = function (about, predicate, value) {
 	if (value.taf !== undefined) {
 		if (value.taf[this.id] === undefined) {
@@ -247,7 +177,7 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 
 
 // EXAMPLE OF AN ACTION WITH LOCAL STATE
-/*var dbpv_taf_dummy = new TafAction();
+var dbpv_taf_dummy = new TafAction();
 
 dbpv_taf_dummy.id = "dummy";
 
@@ -282,7 +212,7 @@ dbpv_taf_dummy.execute = function (about, predicate, value) {			 // called when 
 };
 
 // EXAMPLE OF AN ACTION WITH GLOBAL STATE
-var dbpv_taf_global = new TafAction();
+/*var dbpv_taf_global = new TafAction();
 
 dbpv_taf_global.id = "global";
 dbpv_taf_global.clicks = 0;

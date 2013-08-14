@@ -88,7 +88,7 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 		for(var i = 0; i<$scope.taf_actions.length; i++) {
 			var action = $scope.taf_actions[i];
 			if (action.id == actionname) {
-				action.display(instance);
+				return action.display(instance);
 			}
 		}
 	};

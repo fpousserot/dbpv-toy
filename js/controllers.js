@@ -74,26 +74,6 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 
 	$scope.taf_actions = dbpv_taf_actions;
 
-//XXX
-	$scope.executeAction = function(actionname, instance) {
-		for(var i = 0; i<$scope.taf_actions.length; i++) {
-			var action = $scope.taf_actions[i];
-			if (action.id == actionname) {
-				action.execute(instance);
-			}
-		}
-	};
-
-	$scope.displayAction = function(actionname, instance) {
-		for(var i = 0; i<$scope.taf_actions.length; i++) {
-			var action = $scope.taf_actions[i];
-			if (action.id == actionname) {
-				return action.display(instance);
-			}
-		}
-	};
-//XXX
-
 	$scope.sortPredicates = function(item) {
 		return item.predid;
 	};
@@ -106,17 +86,6 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 
 	$scope.$watch('predicates', function(predicates) {
 		if (predicates !== undefined) {
-			// TAF Binding
-			for (var id in predicates) {
-				var pred = predicates[id];
-				for (var i = 0; i<pred.values.length; i++) {
-					var val = pred.values[i];
-					for (var j = 0; j<$scope.taf_actions.length; j++) {
-						var action = $scope.taf_actions[j];
-						action.autobind($scope.about, pred, val);
-					}
-				}
-			}
 			// Pretty Box
 			for (var id in predicates) {
 				if (id!==undefined) {
