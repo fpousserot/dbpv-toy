@@ -200,3 +200,35 @@ label.dbpv-tabletop {
 	border: 1pt solid #CCC;
 }
 
+#dbpvpreview {
+	z-index: 1999;
+	background-color: white;
+	border: 1px solid #CCC;
+	max-width: 500px;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	margin-right: 15px;
+	overflow: hidden;
+	box-shadow: 1px 1px 4px #AAA;
+}
+
+#dbpvpreview #dbpvptext {
+}
+
+#dbpvpreview #dbpvpthumbnail {
+	float:left;
+	margin-right: 15px;
+}
+
+
+#dbpvpreview #dbpvplabel {
+	padding-left: 15px;
+	padding-top: 5px;
+	font-size: 2.5em;
+}
+
+#dbpvpreview #dbpvpdescription {
+	margin-bottom: 10px;
+	padding-left: 15px;
+}
+

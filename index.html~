@@ -26,10 +26,9 @@
 	<![endif]-->
 
 	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
-	<script src="js/leaflet-directive.js"></script>
 </head>
 <body>
-	<div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>
+
 
 <div id="dynamic" style="display:none;" >
 	<script type="text/javascript">

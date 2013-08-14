@@ -1,4 +1,4 @@
-function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
+function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir, fwd) {
 	$scope.$parent.$root.$watch("primary_lang", function(lang){
 		$scope.primary_lang = lang;
 	});
@@ -19,6 +19,57 @@ function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
 				destination.complete = true;
 			}
 		}
+	};
+
+	$scope.entityPreview = function(rurl, top, left) {
+		var entityPre = "/resource";
+		var ontologyPre = "/ontology";
+		var propertyPre = "/property";
+		if (rurl[0]=='/') { //local XXX
+			$scope.preview = {};
+			$scope.preview.top = top;
+			$scope.preview.left = left;
+			$scope.preview.show = true;
+			if (rurl.substring(0, entityPre.length) == entityPre) {
+				$scope.preview.type = "entity";
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
+				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail");
+				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment");
+			}else if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
+				$scope.preview.type = "property";
+				$scope.preview.description = [];
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
+				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range");
+				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain");
+			}
+		}
+	};
+
+	$scope.previewItemHover = function() {
+		$scope.preview.itemhover = true;
+		$scope.preview.previewhover = false;
+	};
+
+	$scope.previewItemUnhover = function() {
+		$scope.preview.itemhover = false;
+		$scope.previewDisabled();
+	};
+
+	$scope.previewHover = function() {
+		$scope.preview.previewhover = true;
+	};
+
+	$scope.previewUnhover = function() {
+		$scope.preview.previewhover = false;
+		$scope.previewDisabled();
+	};
+
+	$scope.previewDisabled = function() {
+		$timeout(function() {
+			if ($scope.preview.previewhover == false && $scope.preview.itemhover == false) {	
+				$scope.preview = {};
+			}
+		},200);
 	};
 
 	$scope.taf_actions = dbpv_taf_actions;
@@ -47,20 +98,20 @@ function MetaCtrl($scope, $routeParams, $filter, Entity, dir, fwd) {
 	},true);
 }
 
-function EntityCtrl($scope, $routeParams, $filter, Entity) {
-	MetaCtrl($scope, $routeParams, $filter, Entity, "resource", false);	
+function EntityCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "resource", false);	
 }
 
-function OwlCtrl($scope, $routeParams, $filter, Entity) {
-	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+function OwlCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
 }
 
-function PropCtrl($scope, $routeParams, $filter, Entity) {
-	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+function PropCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
 }
 
-function ClassCtrl($scope, $routeParams, $filter, Entity) {
-	MetaCtrl($scope, $routeParams, $filter, Entity, "ontology", true);
+function ClassCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
+	MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, "ontology", true);
 }
 
 function LookupCtrl($scope, $http, $timeout) {

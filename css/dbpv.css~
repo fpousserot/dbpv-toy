@@ -195,8 +195,39 @@ label.dbpv-tabletop {
 	margin-bottom:10px;
 }
 
-#dbpvpmapcontainer #dbpvpmap-active {
+#dbpvpmapcontainer .dbpvpmap-active {
 	height: 200px;
 	border: 1pt solid #CCC;
+}
+
+#dbpvpreview {
+	z-index: 1999;
+	background-color: white;
+	border: 1px solid #CCC;
+	max-width: 500px;
+	padding-right: 15px;
+	margin-bottom: 15px;
+	overflow: hidden;
+	box-shadow: 1px 1px 4px #AAA;
+}
+
+#dbpvpreview #dbpvptext {
+}
+
+#dbpvpreview #dbpvpthumbnail {
+	float:left;
+	margin-right: 15px;
+}
+
+
+#dbpvpreview #dbpvplabel {
+	padding-left: 15px;
+	padding-top: 5px;
+	font-size: 2.5em;
+}
+
+#dbpvpreview #dbpvpdescription {
+	margin-bottom: 10px;
+	padding-left: 15px;
 }
 

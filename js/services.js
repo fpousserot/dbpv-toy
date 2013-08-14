@@ -4,7 +4,7 @@ angular.module('dbpvServices', [])
 			triples: function(id, scope, dir, fwd) {
 				if (typeof(dir) === 'undefined') dir = 'resource';
 				if (typeof(fwd) === 'undefined') fwd = false;
-				var graph = "http://dbpedia.org"; //XXX
+				var graph = "http://dbpedia.org"; //XXX to dist
 				var space = location.protocol+"//"+location.host; //XXX
 				var entityUrl = graph+"/"+dir+"/"+id;
 				scope.about = {"uri": entityUrl, "type":"uri"};
@@ -22,7 +22,7 @@ angular.module('dbpvServices', [])
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
 				var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
 				var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
-				var endpoint = "http://dbpedia.org/sparql";
+				var endpoint = "http://dbpedia.org/sparql"; //XXX to dist
 				//endpoint = "/sparql";
 
 				// START XXX NEW
@@ -126,7 +126,91 @@ angular.module('dbpvServices', [])
 				}
 				// END XXX NEW
 				$http.defaults.headers.post['Content-Type'] = prevdef;
-				
+			}
+		};
+	}])
+	.factory('Spotlight', ['$http', function($http) {
+		return {
+			annotate: function(text) {
+				delete $http.defaults.headers.common['X-Requested-With'];
+				var endpoint = "http://spotlight.dbpedia.org/rest/annotate";
+				$http.get(endpoint, "text="+text).success(function (data, status, headers, config) {
+
+				})
+				.error(function (data, status, headers, config) {
+
+				});
+			},
+			annotate_async: function(text, callback, coming_through) {
+								delete $http.defaults.headers.common['X-Requested-With'];
+				var endpoint = "http://spotlight.dbpedia.org/rest/annotate";
+				$http.get(endpoint+"?text="+encodeURIComponent(text)).success(function (data, status, headers, config) {	
+					callback(data, coming_through);
+				})
+				.error(function (data, status, headers, config) {
+					alert("Annotation error");
+				});
+			}
+		};
+	}])
+	.factory('Preview', ['$http', function($http) {
+		return {
+			/*entityPreview: function (rurl) {
+				var properties = {
+					'http://dbpedia.org/ontology/thumbnail':'thumbnail',
+					'http://www.w3.org/2000/01/rdf-schema#comment':'description',
+					'http://www.w3.org/2000/01/rdf-schema#label':'label'
+				};
+				var graph = "http://dbpedia.org/"; //XXX
+				var uri = graph+rurl;
+				var preview = {};
+				delete $http.defaults.headers.common['X-Requested-With'];
+				var prevdef = $http.defaults.headers.post['Content-Type'];
+				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
+				var endpoint = "http://live.dbpedia.org/sparql"; //XXX
+				for (var i in properties) {
+					var query = "SELECT ?prop WHERE {<"+uri+"> <"+i+"> ?prop}";
+					query = encodeURIComponent(query);
+					$http.post(endpoint, "query="+query).success(function (data, status, headers, config) {
+						//alert(JSON.stringify(data));
+						var values = data["results"]["bindings"];
+						var vals = [];
+						for (var j = 0; j<values.length; j++) {
+							vals.push(values[j]['prop']);
+						}
+						preview[properties[i]] = vals;
+						alert(JSON.stringify(preview));
+					})
+					.error(function (data, status, headers, config) {
+						alert("Could load preview property");
+					});
+				}
+				$http.defaults.headers.post['Content-Type'] = prevdef;
+				return preview;
+			},*/
+			getProperty: function (rurl, prop) {
+				var vals = [];
+				var graph = "http://dbpedia.org"; //XXX
+				var uri = graph+rurl;
+				delete $http.defaults.headers.common['X-Requested-With'];
+				var prevdef = $http.defaults.headers.post['Content-Type'];
+				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
+				var endpoint = "http://dbpedia.org/sparql"; //XXX
+				var query = "SELECT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
+				query = encodeURIComponent(query);
+				$http.post(endpoint, "query="+query).success(function (data, status, headers, config) {
+					var values = data["results"]["bindings"];
+					for (var j = 0; j<values.length; j++) {
+						var val = values[j]['prop'];
+						dbpv_preprocess_triple_value(val);
+						vals.push(val);
+					}
+				})
+				.error(function (data, status, headers, config) {
+					alert("Couldn't load preview property");
+				});
+				$http.defaults.headers.post['Content-Type'] = prevdef;
+				return vals;
 			}
 		};
 	}]);

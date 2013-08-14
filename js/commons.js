@@ -48,6 +48,9 @@ function dbpv_preprocess_triple(triple) {
 
 function dbpv_preprocess_triple_value(sing) {
 	if (sing.type=="uri") {
+		if (sing.url === undefined) {
+			sing.url = sing.value;
+		}
 		sing.uri = sing.url
 		for (var start in dbpv_prefixes) {
 			if (sing.url.slice(0, start.length) == start) {
@@ -57,6 +60,7 @@ function dbpv_preprocess_triple_value(sing) {
 		}
 		if (sing.url.slice(0, dbpv_localgraph.length) == dbpv_localgraph) {
 			sing.url = sing.url.slice(dbpv_localgraph.length, sing.url.length);
+			sing.url.local = true;
 		}
 		if (sing.prefix!==undefined && sing.short !== undefined) {
 			sing.label = sing.prefix + ":" + sing.short;
@@ -67,4 +71,12 @@ function dbpv_preprocess_triple_value(sing) {
 	}else{
 		sing.label = sing.value;
 	}
+}
+
+function dbpv_preprocess_triple_url(url) {
+	if (url.slice(0, dbpv_localgraph.length) == dbpv_localgraph) {
+		url = url.slice(dbpv_localgraph.length, url.length);
+		url.local = true;
+	}
+	return url;
 }

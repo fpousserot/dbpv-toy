@@ -102,3 +102,39 @@ dbpv.filter("actionFilter", function() {
 	};
 });
 
+dbpv.directive('compile', function($compile) {
+	return function(scope, element, attrs) {
+		scope.$watch(
+			function(scope) {
+				return scope.$eval(attrs.compile);
+			},
+			function(value) {
+				element.html(value);
+				$compile(element.contents())(scope);
+			}
+		);
+	};
+});
+
+dbpv.directive('dbpvPreview', function($timeout) {
+	return function(scope, element, attrs) {
+		//alert(JSON.stringify(attrs));
+		var to = undefined;
+		element.bind('mouseenter', function () {
+			to = $timeout(function() {
+				var parent = element;
+				var position = parent.offset();
+				position.top = position.top + parent.height();
+				to = undefined;
+				var url = attrs.dbpvPreview;
+				scope.entityPreview(url, position.top, position.left);
+				scope.previewItemHover();
+			}, 800);
+		});
+		element.bind('mouseleave', function () {
+			if(to) $timeout.cancel(to);
+			scope.previewItemUnhover();
+		});
+	};
+});
+

@@ -45,6 +45,52 @@
 	</span>
 -->
 </div>
+<div ng-show="preview.show" id="dbpvpreview" style="position:absolute;top:{{preview.top}}px;left:{{preview.left}}px;" ng-mouseenter="previewHover()" ng-mouseleave="previewUnhover()">
+	<div ng-switch on="preview.type">
+		<div ng-switch-when="entity">
+			<div id="dbpvpthumbnail">
+				<img src="{{preview.thumbnail[0].value}}"></img>
+			</div>
+			<div id="dbpvptext">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label |languageFilter:primary_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-repeat="value in preview.description |languageFilter:primary_lang">
+					{{value.value}}
+				</span>
+			</div>
+			</div>
+		</div>
+		<div ng-switch-when="property">
+			<div id="dbpvplabel">
+				<span ng-repeat="value in preview.label | languageFilter:primary_lang">
+					{{value.value}}
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.domain.length>0">
+				Domain:
+				<a href="{{preview.domain[0].url}}">
+					{{preview.domain[0].label}}
+				</a>
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.range.length>0">
+				Range:
+				<a href="{{preview.range[0].url}}">
+					{{preview.range[0].label}}
+				</a>
+				</span>
+			</div>
+		</div>
+		<div ng-switch-default>
+		</div>
+	</div>
+</div>
 <div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>
 
 <div id="triple-list">
@@ -59,7 +105,7 @@
 	<div class="predicate" ng-repeat="(id, predicate) in predicates | predicateFilter:predfilter | predicateValueFilter:valfilter  | orderBy:sortPredicates">
 		<div class="pred-name">
 		<span ng-show="predicate.reverse">is </span>
-		<a href="{{predicate.url}}">
+		<a href="{{predicate.url}}" dbpv-preview="{{predicate.url}}">
 			<span ng-switch on="predicate.prefix">
 				<span ng-switch-when="undefined">{{predicate.label}}</span>
 				<span ng-switch-default>  <span class="rdf-prefix">{{predicate.prefix}}:</span>{{predicate.short}}</span>
@@ -85,13 +131,13 @@
 -->
 				<span>
 					<span ng-switch on="val.type">
-						<span ng-switch-when="uri"> <a href="{{val.url}}">
+						<span ng-switch-when="uri"> <a href="{{val.url}}" dbpv-preview="{{val.url}}" class="entity-preview">
 							<span ng-switch on="val.prefix">
 								<span ng-switch-when="undefined">{{val.label}}</span>
 								<span ng-switch-default>  <span class="rdf-prefix">{{val.prefix}}:</span>{{val.short}}</span>
 							</span>
 						</a> </span>
-						<span ng-switch-default>{{val.label}}</span>
+						<span ng-switch-default><span compile="val.label"></span></span>
 					</span>
 				</span>
 			</div>
