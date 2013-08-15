@@ -138,3 +138,22 @@ dbpv.directive('dbpvPreview', function($timeout) {
 	};
 });
 
+dbpv.directive('labelList', function(Preview, $filter) {
+	return {
+		link: function(scope, element, attrs) {
+			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label");
+
+			scope.updateLabellist = function (list) {
+				element.text($filter("languageFilter")(list, scope.primary_lang)[0].label);
+			};
+
+			scope.$watch("labellist", function (list) {
+				scope.updateLabellist(list);
+			}, true);
+			scope.$watch("primary_lang", function (list) {
+				scope.updateLabellist(scope.labellist);
+			});
+		}
+	};
+});
+

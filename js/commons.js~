@@ -23,7 +23,8 @@ var dbpv_languages = [	{"label":"English", "code": "en"},
 function dbpvp_process_predicate(pretty, predicate) {
 	mapping = { 	"http://www.w3.org/2000/01/rdf-schema#label": "label",
 			"http://www.w3.org/2000/01/rdf-schema#comment": "description",
-			"http://dbpedia.org/ontology/thumbnail": "thumbnail"
+			"http://dbpedia.org/ontology/thumbnail": "thumbnail",
+			"http://xmlns.com/foaf/0.1/isPrimaryTopicOf": "wikipedia"
 		  };
 	var property = mapping[predicate.uri];
 	var value = undefined;
@@ -49,7 +50,7 @@ function dbpv_preprocess_triple(triple) {
 function dbpv_preprocess_triple_value(sing) {
 	if (sing.type=="uri") {
 		if (sing.url === undefined) {
-			sing.url = sing.value
+			sing.url = sing.value;
 		}
 		sing.uri = sing.url
 		for (var start in dbpv_prefixes) {

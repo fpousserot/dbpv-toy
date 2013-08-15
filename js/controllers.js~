@@ -21,6 +21,8 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 		}
 	};
 
+	$scope.previewSemaphore = {"count":0};
+
 	$scope.entityPreview = function(rurl, top, left) {
 		var entityPre = "/resource";
 		var ontologyPre = "/ontology";
@@ -32,15 +34,15 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 			$scope.preview.show = true;
 			if (rurl.substring(0, entityPre.length) == entityPre) {
 				$scope.preview.type = "entity";
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
-				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail");
-				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment");
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
+				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail", $scope.previewSemaphore);
+				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment", $scope.previewSemaphore);
 			}else if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
 				$scope.preview.type = "property";
 				$scope.preview.description = [];
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
-				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range");
-				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain");
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
+				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore);
+				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore);
 			}
 		}
 	};
@@ -74,49 +76,19 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 
 	$scope.taf_actions = dbpv_taf_actions;
 
-//XXX
-	$scope.executeAction = function(actionname, instance) {
-		for(var i = 0; i<$scope.taf_actions.length; i++) {
-			var action = $scope.taf_actions[i];
-			if (action.id == actionname) {
-				action.execute(instance);
-			}
-		}
-	};
-
-	$scope.displayAction = function(actionname, instance) {
-		for(var i = 0; i<$scope.taf_actions.length; i++) {
-			var action = $scope.taf_actions[i];
-			if (action.id == actionname) {
-				return action.display(instance);
-			}
-		}
-	};
-//XXX
-
 	$scope.sortPredicates = function(item) {
 		return item.predid;
 	};
 
 	$scope.predicates = {};
 	$scope.revpredicates = {};
+	$scope.entitySemaphore = 0;
 
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
 	$scope.$watch('predicates', function(predicates) {
 		if (predicates !== undefined) {
-			// TAF Binding
-			for (var id in predicates) {
-				var pred = predicates[id];
-				for (var i = 0; i<pred.values.length; i++) {
-					var val = pred.values[i];
-					for (var j = 0; j<$scope.taf_actions.length; j++) {
-						var action = $scope.taf_actions[j];
-						action.autobind($scope.about, pred, val);
-					}
-				}
-			}
 			// Pretty Box
 			for (var id in predicates) {
 				if (id!==undefined) {
@@ -125,6 +97,7 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 			}
 		}
 	},true);
+
 }
 
 function EntityCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
@@ -152,7 +125,7 @@ function LookupCtrl($scope, $http, $timeout) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
-	$scope.primary_language = "fr";
+	$scope.primary_language = "en";
 
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {

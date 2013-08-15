@@ -48,6 +48,105 @@ function TafLodlive () {
 
 //XXX XXX XXX ACTIONS DECLARE BELOW THIS LINE XXX XXX XXX
 
+// RELFINDER LINKS
+
+var dbpv_taf_relfinder = new TafAction();
+
+dbpv_taf_relfinder.id = "relfinder";
+dbpv_taf_relfinder.description = "View more relations on RelFinder";
+
+dbpv_taf_relfinder.check = function (about, predicate, value) {
+	var dbp = "http://dbpedia.org/resource/";
+	return value.type == "uri" && (value.uri.substring(0, dbp.length) == dbp);
+};
+
+dbpv_taf_relfinder.display = function (about, predicate, value) {
+	return "<span class='glyphicon glyphicon-play'></span>";
+};
+
+dbpv_taf_relfinder.execute = function (about, predicate, value) {
+	//generate URL
+	var dbp = "http://dbpedia.org/resource/";
+	var nameA = about.uri.substring(dbp.length, about.uri.length);
+	var nameB = value.uri.substring(dbp.length, value.uri.length);
+	var urlA = about.uri;
+	var urlB = value.uri;
+	if (predicate.reverse) {
+		var nameC = nameA;
+		nameA = nameB;
+		nameB = nameC;
+		nameC = urlA;
+		urlA = urlB;
+		urlB = nameC;
+	}
+	var pieces = [];
+	pieces.push("http://www.visualdataweb.org/relfinder/demo.swf");
+	pieces.push("?");
+	pieces.push("obj1="+dbpv_taf_relfinder.to64(nameB+"|"+urlB));
+	pieces.push("&obj2="+dbpv_taf_relfinder.to64(nameA+"|"+urlA));
+
+	pieces.push("&name="+dbpv_taf_relfinder.to64("DBpedia"));
+	pieces.push("&abbreviation="+dbpv_taf_relfinder.to64("dbp"));
+	pieces.push("&description="+dbpv_taf_relfinder.to64("Linked Data version of Wikipedia"));
+	pieces.push("&endpointURI="+dbpv_taf_relfinder.to64("http://dbpedia.org/sparql")) //XXX XXX
+	pieces.push("&dontAppendSPARQL="+dbpv_taf_relfinder.to64("true"));
+	pieces.push("&defaultGraphURI="+dbpv_taf_relfinder.to64("http://dbpedia.org"));
+	pieces.push("&isVirtuoso="+dbpv_taf_relfinder.to64("true"));
+	pieces.push("&useProxy=ZmFsc2U=&method=UE9TVA==&autocompleteLanguage=ZW4=&autocompleteURIs=aHR0cDovL3d3dy53My5vcmcvMjAwMC8wMS9yZGYtc2NoZW1hI2xhYmVs&ignoredProperties=aHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zI3R5cGUsaHR0cDovL3d3dy53My5vcmcvMjAwNC8wMi9za29zL2NvcmUjc3ViamVjdCxodHRwOi8vZGJwZWRpYS5vcmcvcHJvcGVydHkvd2lraVBhZ2VVc2VzVGVtcGxhdGUsaHR0cDovL2RicGVkaWEub3JnL3Byb3BlcnR5L3dvcmRuZXRfdHlwZSxodHRwOi8vZGJwZWRpYS5vcmcvcHJvcGVydHkvd2lraWxpbmssaHR0cDovL3d3dy53My5vcmcvMjAwMi8wNy9vd2wjc2FtZUFzLGh0dHA6Ly9wdXJsLm9yZy9kYy90ZXJtcy9zdWJqZWN0&abstractURIs=aHR0cDovL2RicGVkaWEub3JnL29udG9sb2d5L2Fic3RyYWN0&imageURIs=aHR0cDovL2RicGVkaWEub3JnL29udG9sb2d5L3RodW1ibmFpbCxodHRwOi8veG1sbnMuY29tL2ZvYWYvMC4xL2RlcGljdGlvbg==&linkURIs=aHR0cDovL3B1cmwub3JnL29udG9sb2d5L21vL3dpa2lwZWRpYSxodHRwOi8veG1sbnMuY29tL2ZvYWYvMC4xL2hvbWVwYWdlLGh0dHA6Ly94bWxucy5jb20vZm9hZi8wLjEvcGFnZQ==&maxRelationLegth=Mg==");
+
+/*	pieces.push("&useProxy="+dbpv_taf_relfinder.to64("false"));
+	pieces.push("&method="+dbpv_taf_relfinder.to64("POST"));
+	pieces.push("&autocompleteLanguage="+dbpv_taf_relfinder.to64("en"));
+	pieces.push("&autocompleteURIs="+dbpv_taf_relfinder.to64("http://www.w3.org/2000/01/rdf-schema#label"));
+	pieces.push("&ignoredProperties="+dbpv_taf_relfinder.to64("http://dbpedia.org/property/wikiPageUsesTemplate, http://dbpedia.org/property/wikilink, http://dbpedia.org/property/wordnet_type, http://www.w3.org/1999/02/22-rdf-syntax-ns#type, http://www.w3.org/2004/02/skos/core#subject"));
+	pieces.push("&abstractURIs="+dbpv_taf_relfinder.to64("http://dbpedia.org/ontology/abstract"));
+	pieces.push("&imageURIs="+dbpv_taf_relfinder.to64("http://dbpedia.org/ontology/thumbnail, http://xmlns.com/foaf/0.1/depiction"));
+	pieces.push("&linkURIs="+dbpv_taf_relfinder.to64("http://purl.org/ontology/mo/wikipedia, http://xmlns.com/foaf/0.1/homepage, http://xmlns.com/foaf/0.1/page"));
+	pieces.push("&maxRelationLength="+dbpv_taf_relfinder.to64("2"));*/
+	window.open(pieces.join(""));
+};
+
+dbpv_taf_relfinder.to64 = function (input) {
+var keyStr = "ABCDEFGHIJKLMNOP" +
+	               "QRSTUVWXYZabcdef" +
+	               "ghijklmnopqrstuv" +
+	               "wxyz0123456789+/" +
+	               "=";
+	//input = escape(input);
+	var output = "";
+	var chr1, chr2, chr3 = "";
+	var enc1, enc2, enc3, enc4 = "";
+	var i = 0;
+	 
+	do {
+		chr1 = input.charCodeAt(i++);
+	        chr2 = input.charCodeAt(i++);
+	        chr3 = input.charCodeAt(i++);
+	 
+	        enc1 = chr1 >> 2;
+	        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+	        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+	        enc4 = chr3 & 63;
+	 
+	        if (isNaN(chr2)) {
+			enc3 = enc4 = 64;
+	        } else if (isNaN(chr3)) {
+			enc4 = 64;
+	        }
+	 
+	        output = output +
+			keyStr.charAt(enc1) +
+			keyStr.charAt(enc2) +
+			keyStr.charAt(enc3) +
+			keyStr.charAt(enc4);
+		chr1 = chr2 = chr3 = "";
+		enc1 = enc2 = enc3 = enc4 = "";
+	     } while (i < input.length);
+	 
+	return output;
+};
+
+
 // SPOTLIGHT ANNOTATIONS
 
 var dbpv_taf_spotlight = new TafAction();
@@ -153,6 +252,36 @@ dbpv_taf_prettymap.execute = function (about, predicate, value) {
 	}).addTo(map);
 	L.marker(coord).addTo(map);
 
+};
+
+var dbpv_taf_pretty_types = new TafAction();
+dbpv_taf_pretty_types.id = "prettytypes";
+dbpv_taf_pretty_types.description = "Extracts types to display in pretty box";
+
+dbpv_taf_pretty_types.initialize = function (about, predicate, value) {
+	if (dbpv_taf_pretty_types.check (about, predicate, value)) {
+		dbpv_taf_pretty_types.execute (about, predicate, value);
+	}
+};
+
+dbpv_taf_pretty_types.check = function (about, predicate, value) {
+	if (predicate.uri == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
+		return (value.prefix !== undefined && value.prefix == "dbpedia-owl");
+	}else{
+		return false;
+	}
+};
+
+dbpv_taf_pretty_types.display = function(about, predicate, value){
+	return "";
+};
+
+dbpv_taf_pretty_types.execute = function (about, predicate, value) {
+	var scope = angular.element(document.getElementById('pretty-box')).scope();
+	if (scope.dbpvp.types === undefined) {
+		scope.dbpvp.types = [];
+	}
+	scope.dbpvp.types.push("<span label-list='"+value.url+"'>"+value.short+"</span>");
 };
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)

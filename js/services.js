@@ -26,7 +26,8 @@ angular.module('dbpvServices', [])
 				//endpoint = "/sparql";
 
 				// START XXX NEW
-				$http.post(endpoint, "query="+inquery).success(function(data, status, headers, config) {
+				scope.entitySemaphore += 1;
+				$http.post(endpoint, "query="+inquery, {timeout:60000}).success(function(data, status, headers, config) {
 					var predicates = {};
 					var bindings = data["results"]["bindings"];
 					try{
@@ -59,13 +60,16 @@ angular.module('dbpvServices', [])
 					}
 					}catch(err){alert("error in loop");}
 					scope.predicates = jQuery.extend({}, scope.predicates, predicates);
+					scope.entitySemaphore -= 1;
 				}).
 				error(function (data, status, headers, config) {
 					alert("Inquery loading error");
+					scope.entitySemaphore -= 1;
 				});
 				// MEDIAS RES XXX NEW
 				if (!fwd) {
-					$http.post(endpoint, "query="+outquery).success(function(data, status, headers, config) {
+					scope.entitySemaphore += 1;
+					$http.post(endpoint, "query="+outquery, {timeout: 60000}).success(function(data, status, headers, config) {
 						predicates = {};
 						var bindings = data["results"]["bindings"];
 						try{
@@ -119,9 +123,11 @@ angular.module('dbpvServices', [])
 							}
 							scope.predicates[revpred] = transfer;
 						}
+						scope.entitySemaphore -= 1;
 					}).
 					error(function (data, status, headers, config) {
 						alert("Outquery loading error");
+						scope.entitySemaphore -= 1;
 					});
 				}
 				// END XXX NEW
@@ -188,7 +194,8 @@ angular.module('dbpvServices', [])
 				$http.defaults.headers.post['Content-Type'] = prevdef;
 				return preview;
 			},*/
-			getProperty: function (rurl, prop) {
+			getProperty: function (rurl, prop, loadingSemaphore) {
+				if (typeof(loadingSemaphore) == "undefined") loadingSemaphore = {"count":0};
 				var vals = [];
 				var graph = "http://dbpedia.org"; //XXX
 				var uri = graph+rurl;
@@ -198,7 +205,9 @@ angular.module('dbpvServices', [])
 				var endpoint = "http://dbpedia.org/sparql"; //XXX
 				var query = "SELECT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
-				$http.post(endpoint, "query="+query).success(function (data, status, headers, config) {
+				loadingSemaphore.count += 1;
+				$http.post(endpoint, "query="+query, {timeout:60000}).success(function (data, status, headers, config) {
+					loadingSemaphore.count -= 1;
 					var values = data["results"]["bindings"];
 					for (var j = 0; j<values.length; j++) {
 						var val = values[j]['prop'];
@@ -207,7 +216,8 @@ angular.module('dbpvServices', [])
 					}
 				})
 				.error(function (data, status, headers, config) {
-					alert("Couldn't load preview property");
+					loadingSemaphore.count -= 1;
+					//alert("Couldn't load preview property");
 				});
 				$http.defaults.headers.post['Content-Type'] = prevdef;
 				return vals;

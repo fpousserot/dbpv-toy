@@ -10,10 +10,18 @@
 			{{value.value}}
 		</span>
 	</div>
+	<div id="dbpvptypes" ng-show="dbpvp.types.length>0">
+		<span class="dbpvptype" ng-repeat="type in dbpvp.types">
+			<span compile="type"></span><span class="comma">, </span>
+		</span>	
+	</div>
 	<div id="dbpvpdescription">
 		<span ng-repeat="value in dbpvp.description |languageFilter:primary_lang">
 			{{value.value}}
 		</span>
+	</div>
+	<div id="loading" ng-show="entitySemaphore>0">
+		<center><img style="margin-bottom:15px;" src="/css/ajax-loader.gif"></img></center>
 	</div>
 	</div>
 <!--        <span ng-repeat="pretty in predicates | prettyFilterLang:primary_lang">
@@ -89,6 +97,9 @@
 		</div>
 		<div ng-switch-default>
 		</div>
+	</div>
+	<div id="previewSpinner" ng-show="previewSemaphore.count>0">
+		<center><img src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
 	</div>
 </div>
 <div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>

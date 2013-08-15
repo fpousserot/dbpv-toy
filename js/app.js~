@@ -127,14 +127,33 @@ dbpv.directive('dbpvPreview', function($timeout) {
 				position.top = position.top + parent.height();
 				to = undefined;
 				var url = attrs.dbpvPreview;
-				scope.previewItemHover();
 				scope.entityPreview(url, position.top, position.left);
+				scope.previewItemHover();
 			}, 800);
 		});
 		element.bind('mouseleave', function () {
 			if(to) $timeout.cancel(to);
 			scope.previewItemUnhover();
 		});
+	};
+});
+
+dbpv.directive('labelList', function(Preview, $filter) {
+	return {
+		link: function(scope, element, attrs) {
+			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label");
+
+			scope.updateLabellist = function (list) {
+				element.text($filter("languageFilter")(list, scope.primary_lang)[0].label);
+			};
+
+			scope.$watch("labellist", function (list) {
+				scope.updateLabellist(list);
+			}, true);
+			scope.$watch("primary_lang", function (list) {
+				scope.updateLabellist(list);
+			});
+		}
 	};
 });
 

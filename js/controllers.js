@@ -21,6 +21,9 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 		}
 	};
 
+	$scope.previewSemaphore = {};
+	$scope.previewSemaphore.count = 0;
+
 	$scope.entityPreview = function(rurl, top, left) {
 		var entityPre = "/resource";
 		var ontologyPre = "/ontology";
@@ -32,15 +35,15 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 			$scope.preview.show = true;
 			if (rurl.substring(0, entityPre.length) == entityPre) {
 				$scope.preview.type = "entity";
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
-				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail");
-				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment");
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
+				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail", $scope.previewSemaphore);
+				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment", $scope.previewSemaphore);
 			}else if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
 				$scope.preview.type = "property";
 				$scope.preview.description = [];
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label");
-				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range");
-				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain");
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
+				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore);
+				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore);
 			}
 		}
 	};
@@ -80,6 +83,7 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 
 	$scope.predicates = {};
 	$scope.revpredicates = {};
+	$scope.entitySemaphore = 0;
 
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
@@ -94,6 +98,7 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 			}
 		}
 	},true);
+
 }
 
 function EntityCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
@@ -121,7 +126,7 @@ function LookupCtrl($scope, $http, $timeout) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
-	$scope.primary_language = "fr";
+	$scope.primary_language = "en";
 
 	$scope.$watch('term', function(term) {
 		if ($scope.term === undefined || $scope.term == "") {

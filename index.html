@@ -58,7 +58,7 @@
 				</div>
 				<ul id="lookup-results">
 					<li ng-repeat="result in results">
-						<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>
+						<a href="{{result.url}}" ng-click="clearResults()" dbpv-preview="{{result.url}}">{{result.short}}</a>
 					</li>
 				</ul>
 			</form>

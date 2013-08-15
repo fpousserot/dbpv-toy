@@ -148,7 +148,7 @@ label.dbpv-tabletop {
 
 #lookup-results {
 	list-style-type: none;
-	position: fixed;
+	position: absolute;
 	top: 69px;
 	left: 225px;
 	min-width: 50%;
@@ -183,6 +183,16 @@ label.dbpv-tabletop {
 	padding-left: 15px;
 	padding-top: 5px;
 	font-size: 2.5em;
+}
+
+#pretty-box #dbpvptypes {
+	padding-bottom:5px;
+	font-size: 1.5em;
+	color: #999;
+}
+
+#pretty-box #dbpvptypes .dbpvptype:last-child .comma{
+	display:none;
 }
 
 #pretty-box #dbpvpdescription {
