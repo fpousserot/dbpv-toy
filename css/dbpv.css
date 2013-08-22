@@ -2,6 +2,17 @@ body {
 	background-color: #EEEEEE;
 }
 
+.form-control {
+	border-radius: 0px 0px 0px 0px;
+}
+
+.navbar #searchbar ul.typeahead {
+	padding-top:0px;
+	padding-bottom:0px;
+	border-radius: 0px 0px 0px 0px;
+}
+
+
 .dbpv-input {
 	box-shadow: none;
 }
@@ -31,7 +42,7 @@ body {
 }
 
 .navbar #searchbar .entity-search {
-	max-width: 50%;
+	max-width: 67%;
 }
 
 .navbar #searchbar .select-lang {
@@ -200,6 +211,12 @@ label.dbpv-tabletop {
 	padding-left: 15px;
 }
 
+#pretty-box #dbpvplinks {
+	padding-left: 15px;
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
 #dbpvpmapcontainer {
 	position:relative;
 	margin-bottom:10px;
@@ -241,4 +258,3 @@ label.dbpv-tabletop {
 	margin-bottom: 10px;
 	padding-left: 15px;
 }
-

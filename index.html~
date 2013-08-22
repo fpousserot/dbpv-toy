@@ -8,24 +8,24 @@
 	<link rel="stylesheet" href="css/bootstrap-glyphicons.css"></link>
 	<link rel="stylesheet" href="css/dbpv.css"></link>
 
-	<title>Index</title>
+	<title ng:bind-template="{{about.title}} | DBpedia">Index</title>
 	<script src="js/jquery.js"></script>
-	<script src="js/jquery.rdfquery.core.js"></script>
-	<script src="js/jquery.rdfquery.rdfa.js"></script>
 	<script src="js/angular.min.js"></script>
+	<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.5.0.js"></script>
 	<script src="js/commons.js"></script>
-	<script src="js/app.js"></script>
+	<script charset="UTF-8" src="js/app.js"></script>
+	<script src="js/dbpv.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/controllers.js"></script>
 	<script src="js/taf.js"></script>
 
 	<!--LEAFLET -->
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<link rel="stylesheet" href="/css/leaflet.css" />
 	<!--[if lte IE 8]>
-	    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+	    <link rel="stylesheet" href="/css/leaflet.ie.css" />
 	<![endif]-->
 
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+	<script src="/js/leaflet.js"></script>
 </head>
 <body>
 
@@ -43,24 +43,18 @@
 	<div class="navbar">
 		<div class="dbp-logo">
 			<img src="css/200px-dbpedia.png"></img>
-			<p> Named Graph: dbpedia.org </p>
-			<p> Data Space: localhost </p>
+			<p> Named Graph: {{localgraph}} </p>
+			<p> Data Space: {{dataspace}} </p>
 		</div>
 		<div id="searchbar" ng-controller="LookupCtrl">
-			<form novalidate class="simple-form form-inline">
+			<form novalidate class="simple-form form-inline form-horizontal">
 				<div class="form-group">
-					<input type="text" class="form-control entity-search dbpv-input" ng-model="term" onblur="clearResults()"/>
-					<button type="button" class="btn-entity-search btn btn-primary" id="search" ng-click="dolookup()">
-						<span class="glyphicon glyphicon-search"></span>
-					</button>
-					<select class="form-control select-lang" ng-model="primary_language" ng-options="lang.code as lang.label for lang in languages">
+					
+					<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" class="form-control entity-search dbpv-input" ng-model="term"/>
+					
+					<select class="form-control select-lang" ng-model="primary_language" ng-options="code as names.nativeName for (code, names) in languages">
 					</select>
 				</div>
-				<ul id="lookup-results">
-					<li ng-repeat="result in results">
-						<a href="{{result.url}}" ng-click="clearResults()">{{result.short}}</a>
-					</li>
-				</ul>
 			</form>
 	
 		</div>

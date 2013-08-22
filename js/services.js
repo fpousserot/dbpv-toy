@@ -4,10 +4,12 @@ angular.module('dbpvServices', [])
 			triples: function(id, scope, dir, fwd) {
 				if (typeof(dir) === 'undefined') dir = 'resource';
 				if (typeof(fwd) === 'undefined') fwd = false;
-				var graph = "http://dbpedia.org"; //XXX to dist
-				var space = location.protocol+"//"+location.host; //XXX
+				var graph = scope.localgraph;
+				var space = location.protocol+"//"+location.host;
+				var encodedid = encodeURIComponent(id);
+				id = encodedid;
 				var entityUrl = graph+"/"+dir+"/"+id;
-				scope.about = {"uri": entityUrl, "type":"uri"};
+				scope.$parent.$root.about = {"uri": entityUrl, "type":"uri", "title":id};
 				var trips = [];
 				var preloaded = $("#content");
 				var about = $("[about]").attr("about");
@@ -20,9 +22,9 @@ angular.module('dbpvServices', [])
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var inquery = encodeURIComponent("SELECT ?hasprop ?v where {<" + entityUrl + "> ?hasprop ?v}");
-				var outquery = encodeURIComponent("SELECT ?v ?isprop where { ?v ?isprop <" + entityUrl + ">} LIMIT 1000");
-				var endpoint = "http://dbpedia.org/sparql"; //XXX to dist
+				var inquery = encodeURIComponent("SELECT DISTINCT ?hasprop ?v where { <" + entityUrl + "> ?hasprop ?v}");
+				var outquery = encodeURIComponent("SELECT DISTINCT ?v ?isprop where { ?v ?isprop <" + entityUrl + "> } LIMIT 1000");
+				var endpoint = scope.endpoint; //XXX to dist
 				//endpoint = "/sparql";
 
 				// START XXX NEW
@@ -44,8 +46,8 @@ angular.module('dbpvServices', [])
 							object.url = object.value;
 						}
 						var property = {"type":"uri", "url": tripleline["hasprop"]["value"], "reverse":false, "complete":true};
-						dbpv_preprocess_triple_value(property);
-						dbpv_preprocess_triple_value(object);
+						dbpv_preprocess_triple_value(property, graph);
+						dbpv_preprocess_triple_value(object, graph);
 
 						predid  = "i-"+property.uri;
 						predicate = predicates[predid];
@@ -60,6 +62,7 @@ angular.module('dbpvServices', [])
 					}
 					}catch(err){alert("error in loop");}
 					scope.predicates = jQuery.extend({}, scope.predicates, predicates);
+					//alert(JSON.stringify(scope.predicates));
 					scope.entitySemaphore -= 1;
 				}).
 				error(function (data, status, headers, config) {
@@ -85,8 +88,8 @@ angular.module('dbpvServices', [])
 								subject.url = subject.value;
 							}
 							var property = {"type":"uri", "url": tripleline["isprop"]["value"], "reverse":true};
-							dbpv_preprocess_triple_value(property);
-							dbpv_preprocess_triple_value(subject);
+							dbpv_preprocess_triple_value(property, graph);
+							dbpv_preprocess_triple_value(subject, graph);
 
 							predid = "o-"+property.uri;
 							predicate = predicates[predid];
@@ -160,49 +163,13 @@ angular.module('dbpvServices', [])
 		};
 	}])
 	.factory('Preview', ['$http', function($http) {
-		return {
-			/*entityPreview: function (rurl) {
-				var properties = {
-					'http://dbpedia.org/ontology/thumbnail':'thumbnail',
-					'http://www.w3.org/2000/01/rdf-schema#comment':'description',
-					'http://www.w3.org/2000/01/rdf-schema#label':'label'
-				};
-				var graph = "http://dbpedia.org/"; //XXX
-				var uri = graph+rurl;
-				var preview = {};
-				delete $http.defaults.headers.common['X-Requested-With'];
-				var prevdef = $http.defaults.headers.post['Content-Type'];
-				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var endpoint = "http://live.dbpedia.org/sparql"; //XXX
-				for (var i in properties) {
-					var query = "SELECT ?prop WHERE {<"+uri+"> <"+i+"> ?prop}";
-					query = encodeURIComponent(query);
-					$http.post(endpoint, "query="+query).success(function (data, status, headers, config) {
-						//alert(JSON.stringify(data));
-						var values = data["results"]["bindings"];
-						var vals = [];
-						for (var j = 0; j<values.length; j++) {
-							vals.push(values[j]['prop']);
-						}
-						preview[properties[i]] = vals;
-						alert(JSON.stringify(preview));
-					})
-					.error(function (data, status, headers, config) {
-						alert("Could load preview property");
-					});
-				}
-				$http.defaults.headers.post['Content-Type'] = prevdef;
-				return preview;
-			},*/
-			getProperty: function (rurl, prop, loadingSemaphore) {
+		return {getProperty: function (rurl, prop, loadingSemaphore, graph, endpoint) {
 				if (typeof(loadingSemaphore) == "undefined") loadingSemaphore = {"count":0};
 				var vals = [];
-				var graph = "http://dbpedia.org"; //XXX
 				var uri = graph+rurl;
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var endpoint = "http://dbpedia.org/sparql"; //XXX
 				var query = "SELECT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
 				loadingSemaphore.count += 1;
@@ -211,7 +178,7 @@ angular.module('dbpvServices', [])
 					var values = data["results"]["bindings"];
 					for (var j = 0; j<values.length; j++) {
 						var val = values[j]['prop'];
-						dbpv_preprocess_triple_value(val);
+						dbpv_preprocess_triple_value(val, graph);
 						vals.push(val);
 					}
 				})

@@ -1,13 +1,10 @@
-var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
-
-dbpv.run(function($rootScope) {
-	$rootScope.localgraph = "http://dbpedia.org";
-	$rootScope.dataspace = "localhost";
-	$rootScope.primary_lang = "en";
-	$rootScope.fallback_lang = "en";
-	$rootScope.endpoint = "http://live.dbpedia.org/sparql";
-	$rootScope.languages = {
-    "ab":{"name":"Abkhaz",
+/**
+ * @author Phil Teare
+ * using wikipedia data
+ */
+isoLangs = {
+    "ab":{
+        "name":"Abkhaz",
         "nativeName":"аҧсуа"
     },
     "aa":{
@@ -734,6 +731,6 @@ dbpv.run(function($rootScope) {
         "name":"Zhuang, Chuang",
         "nativeName":"Saɯ cueŋƅ, Saw cuengh"
     }
-};
-});
+}
+
 

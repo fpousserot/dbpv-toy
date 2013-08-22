@@ -211,6 +211,36 @@ dbpv_taf_spotlight.execute = function (about, predicate, value) {
 	}
 };
 
+// AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
+
+var dbpv_taf_redirect = new TafAction();
+
+dbpv_taf_redirect.id = "redirect";
+dbpv_taf_redirect.description = "Auto Redirect";
+
+dbpv_taf_redirect.initialize = function (about, predicate, value) {
+	if (dbpv_taf_redirect.check (about, predicate, value)) {
+		dbpv_taf_redirect.execute (about, predicate, value);
+	}
+};
+
+dbpv_taf_redirect.check = function (about, predicate, value) {
+	if (predicate.uri == "http://dbpedia.org/ontology/wikiPageRedirects" && predicate.reverse==false) {
+		return true;
+	}else {
+		return false;
+	}
+};
+
+dbpv_taf_redirect.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_redirect.execute = function (about, predicate, value) {
+	//window.location = value.url;
+	window.location = "/#"+value.url;
+};
+
 
 // AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
 
@@ -254,6 +284,9 @@ dbpv_taf_prettymap.execute = function (about, predicate, value) {
 
 };
 
+
+// SHOW THE TYPES IN PRETTY BOX
+
 var dbpv_taf_pretty_types = new TafAction();
 dbpv_taf_pretty_types.id = "prettytypes";
 dbpv_taf_pretty_types.description = "Extracts types to display in pretty box";
@@ -284,6 +317,41 @@ dbpv_taf_pretty_types.execute = function (about, predicate, value) {
 	scope.dbpvp.types.push("<span label-list='"+value.url+"'>"+value.short+"</span>");
 };
 
+// SHOW LINKS IN PRETTY BOX
+var dbpv_taf_pretty_links = new TafAction();
+dbpv_taf_pretty_links.id = "prettylinks";
+dbpv_taf_pretty_links.description = "Extracts links to display in pretty box";
+
+dbpv_taf_pretty_links.initialize = function (about, predicate, value) {
+	if (dbpv_taf_pretty_links.check (about, predicate, value)) {
+		dbpv_taf_pretty_links.execute(about, predicate, value);
+	}
+};
+
+dbpv_taf_pretty_links.check = function (about, predicate, value) {
+	if (predicate.uri == "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" || predicate.uri == "http://www.w3.org/2002/07/owl#sameAs") {
+		return true;
+	}else{
+		return false;
+	}
+};
+
+dbpv_taf_pretty_links.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_pretty_links.execute = function (about, predicate, value) {
+	var scope = angular.element(document.getElementById("pretty-box")).scope();
+	if (scope.dbpvp.links === undefined) {
+		scope.dbpvp.links = [];
+	}
+	var freebaseprefix = "http://rdf.freebase.com/";
+	if(value.uri.indexOf("wikipedia") != -1){
+		scope.dbpvp.links.push("<a href='"+value.uri+"'>Wikipedia</a>");
+	}else if (value.uri.substring(0, freebaseprefix.length) == freebaseprefix) {
+		scope.dbpvp.links.push("<a href='"+value.uri+"'>Freebase</a>");
+	}
+};
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 
 var dbpv_taf_lodlive =  new TafAction();

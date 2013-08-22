@@ -1,8 +1,4 @@
 function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir, fwd) {
-	$scope.$parent.$root.$watch("primary_lang", function(lang){
-		$scope.primary_lang = lang;
-	});
-
 	$scope.showMore = function(id) {
 		var predicate = $scope.revpredicates[id];
 		var destination = $scope.predicates[id];
@@ -35,15 +31,15 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 			$scope.preview.show = true;
 			if (rurl.substring(0, entityPre.length) == entityPre) {
 				$scope.preview.type = "entity";
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
-				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail", $scope.previewSemaphore);
-				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment", $scope.previewSemaphore);
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
+				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
+				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 			}else if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
 				$scope.preview.type = "property";
 				$scope.preview.description = [];
-				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore);
-				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore);
-				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore);
+				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
+				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
+				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 			}
 		}
 	};
@@ -118,30 +114,49 @@ function ClassCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
 }
 
 function LookupCtrl($scope, $http, $timeout) {
-	$scope.languages = dbpv_languages;
 	var timer = false;
 	var delay = 500;
-	
+
+	$scope.results = [];
+
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
-	$scope.primary_language = "en";
+	$scope.primary_language = $scope.primary_lang;
 
 	$scope.$watch('term', function(term) {
-		if ($scope.term === undefined || $scope.term == "") {
+		if (term === undefined || term == "") {
 			$scope.results = [];
 		}else{
-			if (timer) {
-				$timeout.cancel(timer);
+			if (term.url !== undefined) {
+				window.location = "/#"+term.url;
+				//window.location = term.url;
 			}
-			timer = $timeout(function() {
-				// DO LOOK UP
-				$scope.dolookup();
-			}, delay);
 		}
 	});
 
+	$scope.lookup = function() {
+		if ($scope.term === undefined || $scope.term == "") {
+			$scope.results = [];
+		}else{
+			delete $http.defaults.headers.common['X-Requested-With'];
+			//alert("returning promise");
+			return $http.get("http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=5&QueryString="+$scope.term).then(function(data) {
+				var results = data.data["results"];
+				var res = [];
+				for (var i = 0; i<results.length ; i++) {
+					var result = results[i];
+					var r = {"type": "uri", "l_label": result['label'], "url": result['uri']};
+					dbpv_preprocess_triple_value(r);
+					res.push(r);
+			//		console.log(r.l_label);
+				}
+				return res;
+			});
+		}
+	};
+/*
 	$scope.dolookup = function () {
 		if ($scope.term === undefined || $scope.term == "") {
 			$scope.results = [];
@@ -155,8 +170,10 @@ function LookupCtrl($scope, $http, $timeout) {
 					var r = {"type": "uri", "l_label": result['label'], "url": result['uri']};
 					dbpv_preprocess_triple_value(r);
 					res.push(r);
+			//		console.log(r.l_label);
 				}
 				$scope.results = res;
+				alert(JSON.stringify($scope.results));
 			});
 		}
 	}
@@ -164,6 +181,7 @@ function LookupCtrl($scope, $http, $timeout) {
 	$scope.clearResults = function() {
 		$scope.results = [];
 	};
+*/
 }
 
 
