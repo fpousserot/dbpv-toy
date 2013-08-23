@@ -47,16 +47,34 @@
 			<p> Data Space: {{dataspace}} </p>
 		</div>
 		<div id="searchbar" ng-controller="LookupCtrl">
-			<form novalidate class="simple-form form-inline form-horizontal">
+			<!--<form novalidate class="simple-form form-inline form-horizontal">
 				<div class="form-group">
 					
-					<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" class="form-control entity-search dbpv-input" ng-model="term"/>
+					<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" placeholder="Search DBpedia..." class="form-control entity-search dbpv-input" ng-model="term"/>
 					
 					<select class="form-control select-lang" ng-model="primary_language" ng-options="code as names.nativeName for (code, names) in languages">
 					</select>
 				</div>
 			</form>
-	
+			-->
+			
+
+			<div class="input-group" id="topstuff">
+				<span class="input-group-addon glyphicon glyphicon-search"></span>
+				<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" placeholder="Search DBpedia..." class="form-control entity-search dbpv-input" ng-model="term"/>
+				<span class="input-group-addon addon-right">@ DBpedia</span>
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle language-button" data-toggle="dropdown"><span style="font-size:0.8em;" class="glyphicon glyphicon-chevron-down"></span> <span ng-bind="getNativeName(primary_language);"></span></button>
+				        <ul class="dropdown-menu">
+					  <li ng-repeat="(code, names) in availableLanguages"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
+					  <li class="divider"></li>
+					  <li ng-repeat="(code, names) in restLanguages()"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
+					</ul>
+				</div>
+			</div>
+
+
+
 		</div>
 	</div>
 

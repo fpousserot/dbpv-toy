@@ -84,12 +84,21 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
+	$scope.searchScope = angular.element(document.getElementById('searchbar')).scope();
+	$scope.searchScope.availableLanguages = {}; //Clear available languages
+
 	$scope.$watch('predicates', function(predicates) {
 		if (predicates !== undefined) {
 			// Pretty Box
 			for (var id in predicates) {
 				if (id!==undefined) {
 					dbpvp_process_predicate($scope.dbpvp, predicates[id]);
+				}
+				for (var i = 0; i<predicates[id].values.length; i++) {
+					var val = predicates[id].values[i];
+					if (val["xml:lang"] !== undefined) {
+						$scope.searchScope.newAvailableLanguage(val["xml:lang"]);
+					}
 				}
 			}
 		}
@@ -119,11 +128,33 @@ function LookupCtrl($scope, $http, $timeout) {
 
 	$scope.results = [];
 
+	$scope.availableLanguages = {};
+	$scope.newAvailableLanguage = function (args) {
+		$scope.availableLanguages[args] = $scope.languages[args];
+	};
+	$scope.restLanguages = function() {
+		var ret = {};
+		for (var code in $scope.languages) {
+			if (! (code in $scope.availableLanguages)) {
+				ret[code] = $scope.languages[code];
+			}
+		}
+		return ret;
+	};
+
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
 	});
 
 	$scope.primary_language = $scope.primary_lang;
+
+	$scope.getNativeName = function(code) {
+		return $scope.languages[code].nativeName;
+	};
+
+	$scope.selectLanguage = function(code) {
+		$scope.primary_language = code;
+	};
 
 	$scope.$watch('term', function(term) {
 		if (term === undefined || term == "") {

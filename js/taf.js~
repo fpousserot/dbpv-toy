@@ -211,6 +211,7 @@ dbpv_taf_spotlight.execute = function (about, predicate, value) {
 	}
 };
 
+
 // AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
 
 var dbpv_taf_redirect = new TafAction();
@@ -225,7 +226,7 @@ dbpv_taf_redirect.initialize = function (about, predicate, value) {
 };
 
 dbpv_taf_redirect.check = function (about, predicate, value) {
-	if (predicate.uri == "http://dbpedia.org/ontology/wikiPageRedirects") {
+	if (predicate.uri == "http://dbpedia.org/ontology/wikiPageRedirects" && predicate.reverse==false) {
 		return true;
 	}else {
 		return false;
