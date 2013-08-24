@@ -6,6 +6,14 @@ body {
 	border-radius: 0px 0px 0px 0px;
 }
 
+.dropdown-menu {
+	top:auto;
+	left:auto;
+	border-radius: 0 0 0 0;
+	padding-top:0;
+	padding-bottom:0;
+}
+
 .navbar #searchbar ul.typeahead {
 	padding-top:0px;
 	padding-bottom:0px;
@@ -239,9 +247,8 @@ label.dbpv-tabletop {
 }
 
 #pretty-box #dbpvplinks {
-	padding-left: 15px;
 	margin-bottom: 10px;
-	font-size: 1.2em;
+	margin-left: 15px;
 }
 
 #dbpvpmapcontainer {

@@ -84,7 +84,10 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
+	$scope.dbpvp.links = {"wikipedia": [{"label":"wikipedia.org/wiki/Lenka", "url":"#"}], "dbpedia": [{"label":"nl.dbpedia.org/page/Lenka", "url":"#"}, {"label":"es.dbpedia.org/page/Lenka", "url":"#"}]};
+
 	$scope.searchScope = angular.element(document.getElementById('searchbar')).scope();
+	$scope.searchScope.availableLanguages = {}; //Clear available languages
 
 	$scope.$watch('predicates', function(predicates) {
 		if (predicates !== undefined) {
@@ -93,7 +96,6 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 				if (id!==undefined) {
 					dbpvp_process_predicate($scope.dbpvp, predicates[id]);
 				}
-				$scope.searchScope.availableLanguages = {}; //Clear available languages
 				for (var i = 0; i<predicates[id].values.length; i++) {
 					var val = predicates[id].values[i];
 					if (val["xml:lang"] !== undefined) {

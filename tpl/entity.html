@@ -1,5 +1,6 @@
 <div id="triples">
 <div id="pretty-box">
+
 	<div id="dbpvpthumbnail">
 		<img src="{{dbpvp.thumbnail[0].value}}"></img>
 	</div>
@@ -19,10 +20,18 @@
 			{{value.value}}
 		</span>
 	</div>
-	<div id="dbpvplinks" ng-show="dbpvp.links.length>0">
-		<span ng-repeat="value in dbpvp.links">
-			<span compile="value"></span>
-		</span>
+	<div id="dbpvplinks">
+		<div ng-repeat="(label, list) in dbpvp.links" style="float:left;margin-right: 15px;">
+			<div ng-show="list.length>1" >
+				<a role="button" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">{{label}} <span class="glyphicon glyphicon-chevron-down" style="font-size:0.6em;"></span></a>
+				<ul class="dropdown-menu">
+					<li ng-repeat="link in list"><a href="{{link.url}}">{{link.label}}</a></li>				
+				</ul>
+			</div>
+			<div ng-show="list.length==1">
+				<a href="{{list[0].url}}">{{list[0].label}}</a>
+			</div>
+		</div>
 	</div>
 	<div id="loading" ng-show="entitySemaphore>0">
 		<center><img style="margin-bottom:15px;" src="/css/ajax-loader.gif"></img></center>

@@ -211,7 +211,6 @@ dbpv_taf_spotlight.execute = function (about, predicate, value) {
 	}
 };
 
-
 // AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
 
 var dbpv_taf_redirect = new TafAction();
@@ -318,10 +317,33 @@ dbpv_taf_pretty_types.execute = function (about, predicate, value) {
 	scope.dbpvp.types.push("<span label-list='"+value.url+"'>"+value.short+"</span>");
 };
 
-// SHOW LINKS IN PRETTY BOX
+// SHOW LINKS IN PRETTY BOX (ONLY FORWARD!!!)
 var dbpv_taf_pretty_links = new TafAction();
 dbpv_taf_pretty_links.id = "prettylinks";
 dbpv_taf_pretty_links.description = "Extracts links to display in pretty box";
+
+//mappings: {predicate match regex, value match regex, label transform regex}
+dbpv_taf_pretty_links.mappings = [
+				{
+				"predex": new RegExp("^http\:\/\/xmlns.com\/foaf\/0\.1\/isPrimaryTopicOf$"), 
+				"valuex": new RegExp(".*wikipedia.*"), 
+				"label": "wikipedia",
+				"labelx": new RegExp("http\:\/\/([a-z]+\.wikipedia\.org\/.+)")
+				},
+				{
+				"predex": new RegExp("^http\:\/\/www\.w3\.org\/2002\/07\/owl\#sameAs$"), 
+				"valuex": new RegExp(".*dbpedia\.org.*"), 
+				"label": "dbpedia",
+				"labelx": new RegExp("http\:\/\/([a-z]+\.dbpedia)\.org\/resource(\/.+)")
+				},
+				{
+				"predex": new RegExp("^http\:\/\/www\.w3\.org\/2002\/07\/owl\#sameAs$"), 
+				"valuex": new RegExp(".*freebase\.com.*"), 
+				"label": "dbpedia",
+				"labelx": new RegExp("^http\:\/\/(.+)$")
+				}
+				];
+
 
 dbpv_taf_pretty_links.initialize = function (about, predicate, value) {
 	if (dbpv_taf_pretty_links.check (about, predicate, value)) {
@@ -330,11 +352,16 @@ dbpv_taf_pretty_links.initialize = function (about, predicate, value) {
 };
 
 dbpv_taf_pretty_links.check = function (about, predicate, value) {
-	if (predicate.uri == "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" || predicate.uri == "http://www.w3.org/2002/07/owl#sameAs") {
-		return true;
-	}else{
-		return false;
+	if (predicate.reverse) return false;
+	for (var i = 0; i<dbpv_taf_pretty_links.mappings.length; i++) {
+		var mapping = dbpv_taf_pretty_links.mappings[i];
+		if (mapping.predex.test(predicate.uri) && mapping.valuex.test(value.uri)) {
+			value.taf.prettylinks.labelx = mapping.labelx;
+			value.taf.prettylinks.label = mapping.label;
+			return true;
+		}
 	}
+	return false;
 };
 
 dbpv_taf_pretty_links.display = function (about, predicate, value) {
@@ -344,14 +371,16 @@ dbpv_taf_pretty_links.display = function (about, predicate, value) {
 dbpv_taf_pretty_links.execute = function (about, predicate, value) {
 	var scope = angular.element(document.getElementById("pretty-box")).scope();
 	if (scope.dbpvp.links === undefined) {
-		scope.dbpvp.links = [];
+		scope.dbpvp.links = {};
 	}
-	var freebaseprefix = "http://rdf.freebase.com/";
-	if(value.uri.indexOf("wikipedia") != -1){
-		scope.dbpvp.links.push("<a href='"+value.uri+"'>Wikipedia</a>");
-	}else if (value.uri.substring(0, freebaseprefix.length) == freebaseprefix) {
-		scope.dbpvp.links.push("<a href='"+value.uri+"'>Freebase</a>");
+	var item = {"url":value.uri};
+	var matches = value.taf.prettylinks.labelx.exec(value.uri);
+	matches = matches.slice(1);
+	item.label = matches.join("");
+	if (scope.dbpvp.links[value.taf.prettylinks.label] === undefined) {
+		scope.dbpvp.links[value.taf.prettylinks.label] = [];
 	}
+	scope.dbpvp.links[value.taf.prettylinks.label].push(item);
 };
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 

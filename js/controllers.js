@@ -84,6 +84,8 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
 
+	//$scope.dbpvp.links = {"wikipedia": [{"label":"wikipedia.org/wiki/Lenka", "url":"#"}], "dbpedia": [{"label":"nl.dbpedia.org/page/Lenka", "url":"#"}, {"label":"es.dbpedia.org/page/Lenka", "url":"#"}]};
+
 	$scope.searchScope = angular.element(document.getElementById('searchbar')).scope();
 	$scope.searchScope.availableLanguages = {}; //Clear available languages
 

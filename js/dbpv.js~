@@ -133,3 +133,32 @@ dbpv.directive('labelList', function(Preview, $filter) {
 		}
 	};
 });
+
+dbpv.directive('dbpvOpDrop', function() {
+	return {
+		link: function(scope, element, attrs) {
+			var label = scope.$eval(attrs.dbpvOpDrop);
+			var list = scope.$eval(attrs.dbpvOpDropList);
+			var html = "";
+			if (list.length>0) {
+html = '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">dbpedia <span style="font-size:0.5em;" class="glyphicon glyphicon-chevron-down"></span></button><ul class="dropdown-menu"><li><a href="nl.dbpedia.org/page/Lenka">nl.dbpedia.org/page/Lenka</a></li><li><a href="es.dbpedia.org/page/Lenka">dbpedia.org/page/Lenka</a></li></ul>'
+				element.html(html);
+
+
+				if (list.length==1) {
+					html = "<a href='"+list[0]+"'>"+label+"</a>";
+				}else{
+					html = "<div class='dropdown'><button type='button' class='btn btn-default btn-small dropdown-toggle' data-toggle='dropdown'>"+label+" <span style='font-size:0.5em;' class='glyphicon glyphicon-chevron-down'></span></button>";
+					html += "<ul class='dropdown-menu' role='menu'>";
+					for (var i = 0; i<list.length; i++) {
+						html += "<li><a href='"+list[i]+"'>"+list[i]+"</a></li>";
+					}
+					html += "</ul></div>";
+				}
+			}
+			if (html !== undefined && html != "") {
+				//element.html(html);
+			}
+		}
+	};
+});

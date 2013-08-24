@@ -64,7 +64,7 @@
 				<input type="text" typeahead="result as result.l_label for result in lookup()" typeahead-wait-ms="800" placeholder="Search DBpedia..." class="form-control entity-search dbpv-input" ng-model="term"/>
 				<span class="input-group-addon addon-right">@ DBpedia</span>
 				<div class="input-group-btn">
-					<button type="button" class="btn btn-default dropdown-toggle language-button" data-toggle="dropdown"><span style="font-size:0.8em;" class="glyphicon glyphicon-chevron-down"></span> <span ng-bind="getNativeName(primary_language);"></span></button>
+					<button type="button" class="btn btn-default dropdown-toggle language-button" data-toggle="dropdown"><span style="font-size:0.8em;" class="glyphicon glyphicon-globe"></span> <span ng-bind="getNativeName(primary_language);"></span></button>
 				        <ul class="dropdown-menu">
 					  <li ng-repeat="(code, names) in availableLanguages"><a href="javascript:void(0);" ng-click="selectLanguage(code);">{{names.nativeName}}</a></li>
 					  <li class="divider"></li>
@@ -72,6 +72,8 @@
 					</ul>
 				</div>
 			</div>
+
+<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">dbpedia <span style="font-size:0.5em;" class="glyphicon glyphicon-chevron-down"></span></button><ul class="dropdown-menu"><li><a href="nl.dbpedia.org/page/Lenka">nl.dbpedia.org/page/Lenka</a></li><li><a href="es.dbpedia.org/page/Lenka">es.dbpedia.org/page/Lenka</a></li></ul>
 
 
 
