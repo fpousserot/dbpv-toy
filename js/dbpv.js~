@@ -122,6 +122,7 @@ dbpv.directive('labelList', function(Preview, $filter, $compile) {
 
 			scope.updateLabellist = function (list) {
 				element.html("<a dbpv-preview='"+attrs.labelList+"' href='"+attrs.labelList+"'>"+$filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label+"</a>");
+				$compile(element.contents())(scope);
 			};
 
 			scope.$watch("labellist", function (list) {
