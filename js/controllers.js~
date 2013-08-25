@@ -147,7 +147,22 @@ function LookupCtrl($scope, $http, $timeout) {
 
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
+		if (lang != "en") {
+			$scope.addNotification("DBpedia Spotlight annotations of non-English texts are probably incorrect", 5000);
+		}
+		if (! (lang in $scope.availableLanguages)) {
+			var more = false;
+			for (var k in $scope.availableLanguages) {
+				more = true;
+				break;
+			}
+			if (more) $scope.addNotification("There are no values in the chosen language for this entity", 5000);
+		}
 	});
+
+	$scope.addNotification = function (text, timeout) {
+		$scope.$broadcast("show notification", {"text":text, "timeout":timeout});
+	};
 
 	$scope.primary_language = $scope.primary_lang;
 
@@ -190,32 +205,33 @@ function LookupCtrl($scope, $http, $timeout) {
 			});
 		}
 	};
-/*
-	$scope.dolookup = function () {
-		if ($scope.term === undefined || $scope.term == "") {
-			$scope.results = [];
-		}else{
-			delete $http.defaults.headers.common['X-Requested-With'];
-			$http.get("http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=5&QueryString="+$scope.term).success(function(data) {
-				var results = data["results"];
-				var res = [];
-				for (var i = 0; i<results.length ; i++) {
-					var result = results[i];
-					var r = {"type": "uri", "l_label": result['label'], "url": result['uri']};
-					dbpv_preprocess_triple_value(r);
-					res.push(r);
-			//		console.log(r.l_label);
-				}
-				$scope.results = res;
-				alert(JSON.stringify($scope.results));
-			});
-		}
-	}
+}
 
-	$scope.clearResults = function() {
-		$scope.results = [];
+function NotificationCtrl ($scope, $timeout) {
+	$scope.notifications = [];
+
+	$scope.$on("show notification", function(event, obj) {
+		$scope.addNotification(obj.text, obj.timeout);
+	});
+
+	$scope.addNotification = function (text, timeout) {
+		var noti = {"text":text};
+		if (timeout !== undefined) {
+			noti.timeout = $timeout (function () {
+				$scope.removeNotification(noti)
+			}, timeout);
+		}
+		$scope.notifications.push(noti);
 	};
-*/
+
+	$scope.removeNotification = function (noti) {
+		for (var i = 0; i<$scope.notifications.length; i++) {
+			if (noti == $scope.notifications[i]) {
+				$scope.notifications.splice(i,1);
+				if (noti.timeout !== undefined) $timeout.cancel(noti.timeout);
+			}
+		}
+	};
 }
 
 

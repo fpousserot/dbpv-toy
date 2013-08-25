@@ -2,6 +2,28 @@ body {
 	background-color: #EEEEEE;
 }
 
+#notifications {
+	position:fixed;
+	left: 10px;
+	bottom: 10px;
+}
+
+#notifications .notification {
+	box-shadow: 1px 2px 6px #777;
+	font-size: 1.2em;
+	background-color: #ffaa33;
+	overflow:hidden;
+	line-height:30px;
+	border-left:5px solid grey;
+	max-width: 400px;
+	padding: 5px 10px;
+	margin-bottom: 5px;
+}
+
+#notifications .notification:hover {
+	background-color: #ff9900;
+}
+
 .form-control {
 	border-radius: 0px 0px 0px 0px;
 }
@@ -248,6 +270,7 @@ label.dbpv-tabletop {
 
 #pretty-box #dbpvplinks {
 	margin-bottom: 10px;
+	margin-left: 15px;
 }
 
 #dbpvpmapcontainer {
