@@ -6,7 +6,8 @@ angular.module('dbpvServices', [])
 				if (typeof(fwd) === 'undefined') fwd = false;
 				var graph = scope.localgraph;
 				var space = location.protocol+"//"+location.host;
-				id = encodeURIComponent(id);
+				var encodedid = encodeURIComponent(id);
+				id = encodedid;
 				var entityUrl = graph+"/"+dir+"/"+id;
 				scope.$parent.$root.about = {"uri": entityUrl, "type":"uri", "title":id};
 				var trips = [];

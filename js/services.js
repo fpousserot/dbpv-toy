@@ -170,7 +170,7 @@ angular.module('dbpvServices', [])
 				delete $http.defaults.headers.common['X-Requested-With'];
 				var prevdef = $http.defaults.headers.post['Content-Type'];
 				$http.defaults.headers.post['Content-Type'] = "application/x-www-form-urlencoded";
-				var query = "SELECT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
+				var query = "SELECT DISTINCT ?prop WHERE {<"+uri+"> <"+prop+"> ?prop}";
 				query = encodeURIComponent(query);
 				loadingSemaphore.count += 1;
 				$http.post(endpoint, "query="+query, {timeout:60000}).success(function (data, status, headers, config) {

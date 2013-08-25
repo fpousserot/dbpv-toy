@@ -29,7 +29,7 @@
 				</ul>
 			</div>
 			<div ng-show="list.length==1">
-				<a href="{{list[0].url}}">{{label}}</a>
+				<a href="{{list[0].url}}">{{list[0].label}}</a>
 			</div>
 		</div>
 	</div>
@@ -58,7 +58,7 @@
 			</div>
 			</div>
 		</div>
-		<div ng-switch-when="property">
+		<div ng-switch-when="ontology">
 			<div id="dbpvplabel">
 				<span ng-repeat="value in preview.label | languageFilter:primary_lang:fallback_lang">
 					{{value.value}}
@@ -78,6 +78,14 @@
 				<a href="{{preview.range[0].url}}">
 					{{preview.range[0].label}}
 				</a>
+				</span>
+			</div>
+			<div id="dbpvpdescription">
+				<span ng-show="preview.superClass.length>0">
+				Superclasses: 
+					<span ng-repeat="scl in preview.superClass">
+						</br><a href="{{scl.url}}">{{scl.label}}</a>
+					</span>
 				</span>
 			</div>
 		</div>

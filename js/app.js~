@@ -6,7 +6,6 @@ dbpv.run(function($rootScope) {
 	$rootScope.primary_lang = "en";
 	$rootScope.fallback_lang = "en";
 	$rootScope.endpoint = "http://dbpedia.org/sparql";
-	$rootScope.availableLanguages = {};
 	$rootScope.languages = {
     "ab":{"name":"Abkhaz",
         "nativeName":"аҧсуа"

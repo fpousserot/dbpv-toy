@@ -35,11 +35,12 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 				$scope.preview.thumbnail = Preview.getProperty(rurl, "http://dbpedia.org/ontology/thumbnail", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 				$scope.preview.description = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#comment", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 			}else if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {
-				$scope.preview.type = "property";
+				$scope.preview.type = "ontology";
 				$scope.preview.description = [];
 				$scope.preview.label = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 				$scope.preview.range = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#range", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 				$scope.preview.domain = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#domain", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
+				$scope.preview.superClass = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#subClassOf", $scope.previewSemaphore, $scope.localgraph, $scope.endpoint);
 			}
 		}
 	};

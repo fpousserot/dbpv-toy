@@ -1,6 +1,6 @@
 
 dbpv.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
@@ -115,13 +115,14 @@ dbpv.directive('dbpvPreview', function($timeout) {
 	};
 });
 
-dbpv.directive('labelList', function(Preview, $filter) {
+dbpv.directive('labelList', function(Preview, $filter, $compile) {
 	return {
 		link: function(scope, element, attrs) {
 			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.localgraph, scope.endpoint);
 
 			scope.updateLabellist = function (list) {
-				element.text($filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label);
+				element.html("<a dbpv-preview='"+attrs.labelList+"' href='"+attrs.labelList+"'>"+$filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label+"</a>");
+				$compile(element.contents())(scope);
 			};
 
 			scope.$watch("labellist", function (list) {
