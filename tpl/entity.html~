@@ -1,4 +1,6 @@
-	<div id="shortcuts" ng-controller="ShortcutCtrl" smart-scroll="100">
+<div id="triples">
+<div id="shortcutswrapper" ng-controller="ShortcutCtrl">
+	<div id="shortcuts" smart-scroll="100"  ng-show="predicates!={}">
 		<div class="shortcut-home" dbpv-top></div>
 		<div class="shortcutscuts">
 			<div class="shortcut" ng-repeat="cut in shortcuts">
@@ -7,9 +9,7 @@
 		</div>
 		<div class="shortcutscuts"></div>
 	</div>
-
-
-<div id="triples">
+</div>
 <div id="pretty-box">
 
 	<div id="dbpvpthumbnail">
