@@ -180,7 +180,7 @@ dbpv.directive('smartScroll', function ($window) {
 				var inittop = 0;
 				var scrolled = false;
 				var inittop = attrs.smartScroll;
-				if (inittop !== undefined) element.offset({"top", inittop, 'left':element.offset().left});
+				if (inittop !== undefined) element.offset({"top": inittop, 'left':element.offset().left});
 				$(window).scroll (function () {
 					if (inittop === undefined) inittop = attrs.smartScroll;
 					if (inittop === undefined) inittop = element.attr("smartscrollinit");
