@@ -147,9 +147,6 @@ function LookupCtrl($scope, $http, $timeout) {
 
 	$scope.$watch('primary_language', function(lang) {
 		$scope.$parent.$root.primary_lang = lang;
-		if (lang != "en") {
-			$scope.addNotification("DBpedia Spotlight annotations of non-English texts are probably incorrect", 5000);
-		}
 		if (! (lang in $scope.availableLanguages)) {
 			var more = false;
 			for (var k in $scope.availableLanguages) {
@@ -232,6 +229,41 @@ function NotificationCtrl ($scope, $timeout) {
 			}
 		}
 	};
+}
+
+function ShortcutCtrl ($scope) {
+	$scope.shortcuts = [];
+
+	$scope.addShortcut = function (url, label, prio) {
+		var neue = {"url":url,"label":label, "prio": prio};
+		var prevbigger = false;
+		var added = false;
+		var duplicate = false;
+		for (var i = 0; i<$scope.shortcuts.length; i++) {
+			if (url == $scope.shortcuts[i].url) {
+				duplicate = true;
+				break
+			}
+		}
+		if (!duplicate) {
+			for (var i = 0; i<$scope.shortcuts.length; i++) {
+				if ($scope.shortcuts[i].prio < neue.prio) {
+					$scope.shortcuts.splice(i,0,neue);
+					added = true;
+					break;
+				}
+			}
+			if ($scope.shortcuts.length == 0 || !added) {
+				$scope.shortcuts.push(neue);
+			}
+		}
+	};
+
+	$scope.addShortcut ("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "RDF Types", 1);
+	$scope.addShortcut ("http://purl.org/dc/terms/subject", "Categories", 2);
+	$scope.addShortcut ("qsdf", "qsdfqsdf", 3);
+	$scope.addShortcut ("dqsdf", "qsdfqsdf", 1);
+	$scope.addShortcut ("ddqsdf", "qsdfqsdf", 0);
 }
 
 

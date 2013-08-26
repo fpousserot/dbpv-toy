@@ -231,6 +231,35 @@ function NotificationCtrl ($scope, $timeout) {
 	};
 }
 
+function ShortcutCtrl ($scope) {
+	$scope.shortcuts = [];
+
+	$scope.addShortcut = function (url, label, prio) {
+		var neue = {"url":url,"label":label, "prio": prio};
+		var prevbigger = false;
+		var added = false;
+		var duplicate = false;
+		for (var i = 0; i<$scope.shortcuts.length; i++) {
+			if (url == $scope.shortcuts[i].url) {
+				duplicate = true;
+				break
+			}
+		}
+		if (!duplicate) {
+			for (var i = 0; i<$scope.shortcuts.length; i++) {
+				if ($scope.shortcuts[i].prio < neue.prio) {
+					$scope.shortcuts.splice(i,0,neue);
+					added = true;
+					break;
+				}
+			}
+			if ($scope.shortcuts.length == 0 || !added) {
+				$scope.shortcuts.push(neue);
+			}
+		}
+	};
+}
+
 
 
 

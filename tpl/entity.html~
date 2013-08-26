@@ -1,8 +1,19 @@
+	<div id="shortcuts" ng-controller="ShortcutCtrl" smart-scroll="100">
+		<div class="shortcut-home" dbpv-top></div>
+		<div class="shortcutscuts">
+			<div class="shortcut" ng-repeat="cut in shortcuts">
+				<span shortcut="cut.url" shortcut-label="cut.label"></span>
+			</div>
+		</div>
+		<div class="shortcutscuts"></div>
+	</div>
+
+
 <div id="triples">
 <div id="pretty-box">
 
 	<div id="dbpvpthumbnail">
-		<img src="{{dbpvp.thumbnail[0].value}}"></img>
+		<img ng-src="{{dbpvp.thumbnail[0].value}}"></img>
 	</div>
 	<div id="dbpvptext">
 	<div id="dbpvplabel">
@@ -25,11 +36,11 @@
 			<div ng-show="list.length>1" >
 				<a role="button" href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">{{label}} <span class="glyphicon glyphicon-chevron-down" style="font-size:0.6em;"></span></a>
 				<ul class="dropdown-menu">
-					<li ng-repeat="link in list"><a href="{{link.url}}">{{link.label}}</a></li>				
+					<li ng-repeat="link in list"><a target="_blank" href="{{link.url}}">{{link.label}}</a></li>				
 				</ul>
 			</div>
 			<div ng-show="list.length==1">
-				<a href="{{list[0].url}}">{{list[0].label}}</a>
+				<a target="_blank" href="{{list[0].url}}">{{list[0].label}}</a>
 			</div>
 		</div>
 	</div>
@@ -43,7 +54,7 @@
 	<div ng-switch on="preview.type">
 		<div ng-switch-when="entity">
 			<div id="dbpvpthumbnail">
-				<img src="{{preview.thumbnail[0].value}}"></img>
+				<img ng-src="{{preview.thumbnail[0].value}}"></img>
 			</div>
 			<div id="dbpvptext">
 			<div id="dbpvplabel">
@@ -93,7 +104,7 @@
 		</div>
 	</div>
 	<div id="previewSpinner" ng-show="previewSemaphore.count>0">
-		<center><img src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
+		<center><img ng-src="/css/ajax-loader.gif" style="margin-left:15px;margin-bottom:15px;"></img></center>
 	</div>
 </div>
 <div id="dbpvpmapcontainer"><div id="dbpvpmap"></div></div>

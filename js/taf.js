@@ -160,6 +160,9 @@ dbpv_taf_spotlight.initialize = function (about, predicate, value) {
 	if (dbpv_taf_spotlight.service === undefined) {
 		dbpv_taf_spotlight.service = angular.element("body").injector().get('Spotlight');
 	}
+	if (dbpv_taf_spotlight.noti === undefined) {
+		dbpv_taf_spotlight.noti = angular.element("#notifications").scope();
+	}
 };
 
 dbpv_taf_spotlight.check = function (about, predicate, value) {
@@ -206,12 +209,15 @@ dbpv_taf_spotlight.execute = function (about, predicate, value) {
 	if (!value.taf.spotlight.busy) {
 		dbpv_taf_spotlight.service.annotate_async(value.value, dbpv_taf_spotlight.execute_callback, value);
 		value.taf.spotlight.busy = true;
+		if (value["xml:lang"] != "en") {
+			dbpv_taf_spotlight.noti.addNotification("DBpedia Spotlight is made for English.\n Annotations retrieved for this language may be incorrect", 7000);
+		}
 	} else {
-		alert("Annotation request to the DBpedia Spotlight API is already pending");
+		dbpv_taf_spotlight.noti.addNotification("Annotation request to the DBpedia Spotlight API is already pending", 5000);
 	}
 };
 
-// AUTO-EXECUTING ACTION ENABLING A MAP AND SHOWING COORDINATES THERE
+// AUTO-EXECUTING ACTION FOR REDIRECTS
 
 var dbpv_taf_redirect = new TafAction();
 
@@ -382,6 +388,70 @@ dbpv_taf_pretty_links.execute = function (about, predicate, value) {
 	}
 	scope.dbpvp.links[value.taf.prettylinks.label].push(item);
 };
+
+
+// AUTO-EXECUTING TO POPULATE SHORTCUTS
+
+var dbpv_taf_short = new TafAction();
+
+dbpv_taf_short.id = "short";
+dbpv_taf_short.description = "Add Shortcuts to shortcut box";
+
+	//$scope.addShortcut ("http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "RDF Types", 1);
+	//$scope.addShortcut ("http://purl.org/dc/terms/subject", "Categories", 2);
+
+dbpv_taf_short.mappings =
+		{
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":{
+				"reverse": false,
+				"label": "TYPES",
+				"prio": 10
+			},
+			"http://purl.org/dc/terms/subject":{
+				"reverse": false,
+				"label": "CATEGORIES",
+				"prio": 11
+			},
+			"http://dbpedia.org/ontology/birthPlace":{
+				"reverse": true,
+				"label": "Born Here",
+				"prio": 1
+			},
+			"http://dbpedia.org/ontology/wikiPageExternalLink":{
+				"reverse":false,
+				"label": "External Links",
+				"prio": 9
+			},
+			"http://dbpedia.org/ontology/starring": {
+				"reverse":true,
+				"label": "Starred in",
+				"prio": 1
+			}
+		};
+
+dbpv_taf_short.check = function (about, predicate, value) {
+	for (var url in dbpv_taf_short.mappings) {
+		if (predicate.uri == url && predicate.reverse == dbpv_taf_short.mappings[url].reverse) {
+			return true;
+		}
+	}
+	return false;
+};
+
+dbpv_taf_short.initialize = function (about, predicate, value) {
+	if (dbpv_taf_short.check (about, predicate, value)) dbpv_taf_short.execute (about, predicate, value);
+};
+
+dbpv_taf_short.display = function (about, predicate, value) {
+	return "";
+};
+
+dbpv_taf_short.execute = function (about, predicate, value) {
+	dbpv_taf_short.shortcuts = angular.element("#shortcuts").scope();
+	dbpv_taf_short.shortcuts.addShortcut (predicate.url, dbpv_taf_short.mappings[predicate.uri].label, dbpv_taf_short.mappings[predicate.uri].prio);
+};
+
+
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
 
 var dbpv_taf_lodlive =  new TafAction();

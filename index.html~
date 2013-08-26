@@ -63,11 +63,21 @@
 
 
 			<div id="notifications" ng-controller="NotificationCtrl">
-				<div class="notification" ng-repeat="notification in notifications">
-					<span ng-click="removeNotification(notification);" class="text">{{notification.text}}</span>
+				<div class="notification" ng-click="removeNotification(notification);" ng-repeat="notification in notifications">
+					<span class="text">{{notification.text}}</span>
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div id="shortcuts" ng-controller="ShortcutCtrl" smart-scroll="100">
+		<div class="shortcut-home" dbpv-top></div>
+		<div class="shortcutscuts">
+			<div class="shortcut" ng-repeat="cut in shortcuts">
+				<span shortcut="cut.url" shortcut-label="cut.label"></span>
+			</div>
+		</div>
+		<div class="shortcutscuts"></div>
 	</div>
 
 	<div id="page-contents" ng-view></div>
