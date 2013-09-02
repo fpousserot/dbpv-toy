@@ -126,6 +126,14 @@ function ClassCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview) {
 }
 
 function LookupCtrl($scope, $http, $timeout) {
+	//COOKIES
+	$.cookie("dbpv_has_js", "1");
+	if ($.cookie("dbpv_primary_lang") === undefined) {
+		$.cookie("dbpv_primary_lang", $scope.primary_lang);
+	}
+	$scope.primary_language = $.cookie("dbpv_primary_lang");
+
+	//END COOKIES*/
 	var timer = false;
 	var delay = 500;
 
@@ -258,6 +266,24 @@ function ShortcutCtrl ($scope) {
 			}
 		}
 	};
+/*
+	$scope.addShortcut ("qsdfqsd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsdk", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsdd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsgd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqqssd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsdfd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdqsffqsqsdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdqsdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqfqsdsdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdqsdffqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfhqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfqgdfd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfdfgsqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqqsfqssdfqd", "qsdfqsfd", 1);
+	$scope.addShortcut ("qsdfqsqsdfsdfgqd", "qsdfqsfd", 1);*/
 }
 
 
