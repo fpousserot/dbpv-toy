@@ -3,8 +3,8 @@ var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 dbpv.run(function($rootScope) {
 	$rootScope.dataspace = "localhost";
 
-	$rootScope.localgraph = "http://nl.dbpedia.org";
-	$rootScope.endpoint = "/sparql";
+	$rootScope.localgraph = "http://dbpedia.org";
+	$rootScope.endpoint = "http://dbpedia.org/sparql";
 	$rootScope.encodegraph = false;
 
 	$rootScope.owlgraph = "http://dbpedia.org";
@@ -15,7 +15,7 @@ dbpv.run(function($rootScope) {
 
 	$rootScope.spotlightendpoint = "http://spotlight.dbpedia.org/rest/annotate";
 
-	if (dbp_prefixes !== undefined) {
+	if (typeof(dbp_prefixes)!='undefined' && dbp_prefixes !== undefined) {
 		dbpv_prefixes = dbp_prefixes;
 	}
 

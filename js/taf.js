@@ -459,7 +459,7 @@ dbpv_taf_short.execute = function (about, predicate, value) {
 
 
 // VIEW IN LODLIVE (only for DBpedia entities) (example of a simple action)
-/*
+
 var dbpv_taf_lodlive =  new TafAction();
 
 dbpv_taf_lodlive.id = "lodlive";
@@ -477,4 +477,4 @@ dbpv_taf_lodlive.execute = function (about, predicate, value) {
 	var lodurl = "http://en.lodlive.it/?";
 	window.open(lodurl+value.uri);
 };
-*/
+
