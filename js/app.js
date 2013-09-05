@@ -1,11 +1,26 @@
 var dbpv = angular.module('dbpv', ['dbpvServices', 'ui.bootstrap']);
 
 dbpv.run(function($rootScope) {
-	$rootScope.localgraph = "http://dbpedia.org";
 	$rootScope.dataspace = "localhost";
+
+	$rootScope.localgraph = "http://nl.dbpedia.org";
+	$rootScope.endpoint = "/sparql";
+	$rootScope.encodegraph = false;
+
+	$rootScope.owlgraph = "http://dbpedia.org";
+	$rootScope.owlendpoint = "http://live.dbpedia.org/sparql";
+	
+	$rootScope.lookupgraph = "http://dbpedia.org";
+	$rootScope.lookupendpoint = "http://lookup.dbpedia.org/api/search";
+
+	$rootScope.spotlightendpoint = "http://spotlight.dbpedia.org/rest/annotate";
+
+	if (dbp_prefixes !== undefined) {
+		dbpv_prefixes = dbp_prefixes;
+	}
+
 	$rootScope.primary_lang = "en";
 	$rootScope.fallback_lang = "en";
-	$rootScope.endpoint = "http://dbpedia.org/sparql";
 	$rootScope.languages = {
     "ab":{"name":"Abkhaz",
         "nativeName":"аҧсуа"
@@ -735,5 +750,6 @@ dbpv.run(function($rootScope) {
         "nativeName":"Saɯ cueŋƅ, Saw cuengh"
     }
 };
+	console.log("app run DONE");
 });
 

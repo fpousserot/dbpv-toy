@@ -1,4 +1,3 @@
-
 dbpv.config(function($routeProvider, $locationProvider) {
 	//$locationProvider.html5Mode(true);
 	$routeProvider
@@ -7,19 +6,36 @@ dbpv.config(function($routeProvider, $locationProvider) {
 		.when('/entity/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
 		.when('/ontology/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl})
 		.when('/property/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl})
-		.when('/class/:id', {templateUrl: '/tpl/entity.html', controller: ClassCtrl})		.when('/ontology/:klas/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
-		.when('/property/:klas/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
+		.when('/class/:id', {templateUrl: '/tpl/entity.html', controller: ClassCtrl})
+
+		.when('/ontology/:klas/:id', {templateUrl: '/tpl/entity.html', controller: OwlCtrl}) //FIXME Quick fix because Angular doesn't support slashes in routing parameters
+		.when('/property/:klas/:id', {templateUrl: '/tpl/entity.html', controller: PropCtrl}) //FIXME same
+
 		.otherwise({redirectTo: '/entity/404'});
 });
 
-
+dbpv.filter("valueFilter", function() {
+	return function(input, query) {
+		if (!query) return input;
+		query = query.label;
+		query = query.toLowerCase();
+		var result = [];
+		angular.forEach(input, function(value) {
+			var label = value.label.toLowerCase();
+			if (label.indexOf(query) != -1) result.push(value);
+		});
+		return result;
+	};
+});
 
 dbpv.filter("predicateFilter", function() {
 	return function(input, query) {
 		if(!query) return input;
+		query = query.toLowerCase();
 		var result = [];
 		angular.forEach(input, function(predicate) {
-			if (predicate.label.indexOf(query) != -1) result.push(predicate);
+			var label = predicate.label.toLowerCase();
+			if (label.indexOf(query) != -1) result.push(predicate);
 		});
 		return result;
 	};
@@ -28,11 +44,14 @@ dbpv.filter("predicateFilter", function() {
 dbpv.filter("predicateValueFilter", function() { //XXX maybe merge with previous filter
 	return function(input, query) {
 		if (!query) return input;
+		query = query.label;
+		query = query.toLowerCase();
 		var result = [];
 		angular.forEach(input, function(predicate) {
 			var hasvalues = false;
 			for (var i = 0; i<predicate.values.length; i++) {	//simulates value filter
-				if (predicate.values[i].label.indexOf(query.label) != -1) {
+				var label = predicate.values[i].label.toLowerCase();
+				if (label.indexOf(query) != -1) {
 					hasvalues = true;
 				}	
 			}
@@ -119,7 +138,10 @@ dbpv.directive('dbpvPreview', function($timeout) {
 dbpv.directive('labelList', function(Preview, $filter, $compile) {
 	return {
 		link: function(scope, element, attrs) {
-			scope.labellist = Preview.getProperty(attrs.labelList, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.localgraph, scope.endpoint);
+			var rurl = attrs.labelList;
+			if (rurl.substr(0, scope.owlgraph.length) == scope.owlgraph) rurl = rurl.substr(scope.owlgraph.length);
+
+			scope.labellist = Preview.getProperty(rurl, "http://www.w3.org/2000/01/rdf-schema#label", {"count":0}, scope.owlgraph, scope.owlendpoint);
 
 			scope.updateLabellist = function (list) {
 				element.html("<a dbpv-preview='"+attrs.labelList+"' href='"+attrs.labelList+"'>"+$filter("languageFilter")(list, scope.primary_lang, scope.fallback_lang)[0].label+"</a>");
