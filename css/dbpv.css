@@ -2,6 +2,16 @@
 	color: #AAA;
 }
 
+#cookiebar {
+	position:fixed;
+	bottom:5px;
+	padding: 10px;
+	z-index: 10000;
+	background-color: rgba(246, 220, 200, .9);
+	border: 1px solid #ddd;
+	left: 50%;
+}
+
 /* above: TO ARRANGE */
 
 body {

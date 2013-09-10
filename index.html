@@ -33,6 +33,35 @@
 <body>
 
 
+<!-- COOKIE NOTIFICATION -->
+
+<script type="text/javascript">
+	function acceptCookies() {
+		$.cookie("dbpv_cookies", "2");
+		checkCookies();
+	}
+	
+	function checkCookies() {
+		var cookiecookie = $.cookie("dbpv_cookies");
+		$("#cookiebar").hide();
+		if (cookiecookie === undefined || cookiecookie != "1") {
+			$('#cookiebar').show();
+		}
+	}
+	$(function() {
+		checkCookies();
+	});
+</script>
+<div id="cookiebar" style="display:none">
+	This website uses cookies
+	<button class="btn btn-primary btn-small" onclick="acceptCookies();">
+		OK
+	</button>
+</div>
+
+<!-- END COOKIE NOTIFICATION -->
+
+
 <div id="dynamic" style="display:none;" >
 	<script type="text/javascript">
 		try{
