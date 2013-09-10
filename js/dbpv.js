@@ -1,5 +1,5 @@
 dbpv.config(function($routeProvider, $locationProvider) {
-	//$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
