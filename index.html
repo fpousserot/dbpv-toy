@@ -37,7 +37,7 @@
 
 <script type="text/javascript">
 	function acceptCookies() {
-		$.cookie("dbpv_cookies", "1");
+		$.cookie("dbpv_cookies", "1", {expires: 365});
 		checkCookies();
 	}
 	
@@ -48,7 +48,7 @@
 			$('#cookiebar').show();
 		}
 	}
-	$(function() {
+	$(document).ready(function() {
 		checkCookies();
 	});
 </script>
