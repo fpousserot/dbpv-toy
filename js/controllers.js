@@ -27,7 +27,9 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 		if (rurl[0]=='/') { //local XXX
 			$scope.preview = {};
 			$scope.preview.top = top;
+				$("#dbpvpreview").css("top",top+"px");
 			$scope.preview.left = left;
+				$("#dbpvpreview").css("left",left+"px");
 			$scope.preview.show = true;
 			if (rurl.substring(0, entityPre.length) == entityPre) {
 				$scope.preview.type = "entity";
@@ -45,7 +47,9 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 		} else if (rurl.substr(0, $scope.owlgraph.length) == $scope.owlgraph) {
 			$scope.preview = {};
 			$scope.preview.top = top;
+				$("#dbpvpreview").css("top",top+"px"); //IE hack ($.browser.msie check requires jQuery plugin now)
 			$scope.preview.left = left;
+				$("#dbpvpreview").css("left",left+"px"); //IE hack ($.browser.msie check requires jQuery plugin now)
 			$scope.preview.show = true;
 			rurl = rurl.substr($scope.owlgraph.length);
 			if (rurl.substring(0, ontologyPre.length) == ontologyPre || rurl.substring(0, propertyPre.length) == propertyPre) {

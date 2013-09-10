@@ -1,5 +1,5 @@
 dbpv.config(function($routeProvider, $locationProvider) {
-	$locationProvider.html5Mode(true);
+	//$locationProvider.html5Mode(true);
 	$routeProvider
 		.when('/page/:id', {templateUrl: '/tpl/entity.html', controller: EntityCtrl})
 		.when('/resource/:id', {redirectTo: function(params, a, search) {return '/page/'+params.id;} })
@@ -121,6 +121,7 @@ dbpv.directive('dbpvPreview', function($timeout) {
 			to = $timeout(function() {
 				var parent = element;
 				var position = parent.offset();
+//alert(JSON.stringify(position));
 				position.top = position.top + parent.height();
 				to = undefined;
 				var url = attrs.dbpvPreview;
@@ -204,7 +205,7 @@ dbpv.directive('smartScroll', function ($window) {
 				var scrolled = false;
 				var inittop = attrs.smartScroll;
 				if (inittop !== undefined) element.offset({"top": inittop, 'left':element.offset().left});
-				alert(JSON.stringify(element.offset()));
+				//alert(JSON.stringify(element.offset()));
 				$(window).scroll (function () {
 					if (inittop === undefined) inittop = attrs.smartScroll;
 					if (inittop === undefined) inittop = element.attr("smartscrollinit");
