@@ -10,6 +10,20 @@
 		<div class="shortcutscuts"></div>
 	</div>
 </div>
+
+<div id="legend" smart-slide=".trigger" smart-slide-content=".container">
+	<div class="trigger" id="legend-title" data-intro="Here, the actions applicable to triples are explained." data-step="7" data-position="left"><a href="javascript:void(0);" ng-click="showLegend();" ><span>LEGEND</span></a></div>
+	<div class="container" id="legends">
+		<div class="legend" ng-repeat="(name, legend) in legends">
+			<div class="name">{{legend.name}}</div>
+			<div class="description">{{legend.description}}</div>
+			<div class="line" ng-repeat="line in legend.lines">
+				<span ng-bind-html-unsafe="line.icon"></span> : {{line.text}}
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="pretty-box" data-intro="This is the pretty box. It displays a small selection of entity properties in a pretty way." data-step="3">
 
 	<div id="dbpvpthumbnail">

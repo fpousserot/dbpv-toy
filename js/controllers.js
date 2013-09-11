@@ -102,6 +102,8 @@ function MetaCtrl($scope, $routeParams, $filter, $timeout, Entity, Preview, dir,
 
 	Entity.triples($routeParams.id, $scope, dir, fwd);
 	$scope.dbpvp = {};
+	
+	$scope.legends = {};
 
 	//$scope.dbpvp.links = {"wikipedia": [{"label":"wikipedia.org/wiki/Lenka", "url":"#"}], "dbpedia": [{"label":"nl.dbpedia.org/page/Lenka", "url":"#"}, {"label":"es.dbpedia.org/page/Lenka", "url":"#"}]};
 
