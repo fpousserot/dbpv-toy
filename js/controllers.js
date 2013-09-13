@@ -309,3 +309,7 @@ function ShortcutCtrl ($scope) {
 	$scope.addShortcut ("qsdfqsqqsfqssdfqd", "qsdfqsfd", 1);
 	$scope.addShortcut ("qsdfqsqsdfsdfgqd", "qsdfqsfd", 1);*/
 }
+
+function FooterCtrl ($scope) {
+	$scope.about.datalink = "/data/"+($scope.about.title);
+}
